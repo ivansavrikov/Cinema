@@ -121,6 +121,9 @@
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Interfaces\ICinemaRepository.cs" />
+    <Compile Include="Models\Movie.cs" />
+    <Compile Include="Models\Serial.cs" />
+    <Compile Include="Repositories\KinopoiskRepository.cs" />
     <Compile Include="Views\MainPage.xaml.cs">
       <DependentUpon>MainPage.xaml</DependentUpon>
     </Compile>
