@@ -125,6 +125,7 @@
     <Compile Include="Services\KinopoiskApiService.cs" />
     <Compile Include="Services\KinopoiskParserService.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\FavoritesFilmsViewModel.cs" />
     <Compile Include="ViewModels\FilmsViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="Views\FavoritesPage.xaml.cs">
