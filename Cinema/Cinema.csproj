@@ -122,6 +122,7 @@
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Models\Entities\FilmEntity.cs" />
     <Compile Include="Models\Entities\GenreEntity.cs" />
+    <Compile Include="Services\KinopoiskApiService.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\FilmsViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
