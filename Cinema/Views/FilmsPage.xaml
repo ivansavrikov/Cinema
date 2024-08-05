@@ -8,5 +8,20 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Grid />
+    <Grid>
+        <GridView ItemsSource="{Binding Films}">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <Image
+                            Width="300"
+                            Height="400"
+                            Source="{Binding PosterUrl}" />
+                        <TextBlock Text="{Binding Title}" />
+                        <TextBlock Text="{Binding Year}" />
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
+    </Grid>
 </Page>
