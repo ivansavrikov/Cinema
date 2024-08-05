@@ -8,7 +8,5 @@
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
-    <Grid>
-        <CheckBox IsChecked="{Binding IsChecked, Mode=TwoWay}">FilmsPage</CheckBox>
-    </Grid>
+    <Grid />
 </Page>
