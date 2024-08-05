@@ -116,15 +116,10 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Abstractions\CinematicContent.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\RelayCommand.cs" />
-    <Compile Include="Interfaces\ICinemaRepository.cs" />
-    <Compile Include="Models\Movie.cs" />
-    <Compile Include="Models\Serial.cs" />
-    <Compile Include="Repositories\KinopoiskRepository.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\FilmsViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
@@ -199,11 +194,8 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Abstractions\.gitkeep" />
     <None Include="Interfaces\.gitkeep" />
     <None Include="Models\.gitkeep" />
-    <None Include="Repositories\.gitkeep" />
-    <None Include="Resources\.gitkeep" />
     <None Include="ViewModels\.gitkeep" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
