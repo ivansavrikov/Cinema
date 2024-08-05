@@ -1,4 +1,5 @@
 ﻿using System;
+using Cinema.Services;
 using Cinema.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel;
@@ -98,6 +99,9 @@ namespace Cinema
         {
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
+
+            services.AddSingleton<KinopoiskParserService>();
+            services.AddSingleton<KinopoiskApiService>();
         }
     }
 }
