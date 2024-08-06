@@ -23,7 +23,7 @@
                         <TextBlock Text="{Binding Title}" />
                         <TextBlock Text="{Binding Year}" />
                         <Button
-                            Command="{Binding DataContext.AddToFavoritesCommand, ElementName=PageRoot}"
+                            Command="{Binding DataContext.AddFilmToFavoritesCommand, ElementName=PageRoot}"
                             CommandParameter="{Binding}"
                             Content="В избранное" />
                         <Button

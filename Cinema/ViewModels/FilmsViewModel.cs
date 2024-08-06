@@ -13,14 +13,13 @@ namespace Cinema.ViewModels
         private readonly CommandAggregator _commandAggregator;
         private readonly KinopoiskApiService _api;
         public ObservableCollection<FilmEntity> Films { get; set; } = new ObservableCollection<FilmEntity>();
-        public ICommand AddToFavoritesCommand => _commandAggregator.GetCommand(nameof(AddToFavoritesCommand));
+        public ICommand AddFilmToFavoritesCommand => _commandAggregator.GetCommand("AddFilmToFavoritesCommand");
         public ICommand GetFilmInfoCommand => _commandAggregator.GetCommand(nameof(GetFilmInfoCommand));
 
         public FilmsViewModel(KinopoiskApiService api, CommandAggregator commandAggregator)
         {
             _api = api;
             _commandAggregator = commandAggregator;
-            _commandAggregator.RegisterCommand(nameof(AddToFavoritesCommand), new RelayCommand(AddToFavorites));
             _commandAggregator.RegisterCommand(nameof(GetFilmInfoCommand), new RelayCommand(GetFilmInfo));
 
             Task.Run(async () => await LoadFilmsAsync()).GetAwaiter().GetResult();
@@ -34,11 +33,6 @@ namespace Cinema.ViewModels
                 foreach (var f in filmOnPage)
                     Films.Add(f);
             }
-        }
-
-        public void AddToFavorites(object film)
-        {
-            _commandAggregator.GetCommand("AddFilmToFavoritesCommand").Execute(film);
         }
 
         public void GetFilmInfo(object film)
