@@ -6,6 +6,6 @@ namespace Cinema.Models.Database.Entities
     {
         public int Id { get; set; }
         public string UserName { get; set; }
-        public List<UserFilm> UserFilms { get; set; }
+        public List<UserFilm> UserFilms { get; set; } = new List<UserFilm>();
     }
 }

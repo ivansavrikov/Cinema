@@ -1,14 +1,17 @@
 ﻿using Cinema.Helpers;
 using Cinema.Models.Entities;
 using Cinema.Services;
+using Cinema.Services.Repositories;
 using System.Windows.Input;
 
 namespace Cinema.ViewModels
 {
-    public class FilmInfoViewModel : BaseViewModel
+    public class FilmDetailsViewModel : BaseViewModel
     {
         private readonly KinopoiskApiService _api;
         private readonly CommandAggregator _commandAggregator;
+        private readonly DatabaseRepository _repository;
+
         private FilmEntity _currentFilm;
         public FilmEntity CurrentFilm
         {
@@ -25,8 +28,9 @@ namespace Cinema.ViewModels
 
         public ICommand SetCurrentFilmCommand => _commandAggregator.GetCommand(nameof(SetCurrentFilmCommand));
         public ICommand AddFilmToFavoritesCommand => _commandAggregator.GetCommand("AddFilmToFavoritesCommand");
-        public FilmInfoViewModel(CommandAggregator commandAggregator, KinopoiskApiService api)
+        public FilmDetailsViewModel(CommandAggregator commandAggregator, KinopoiskApiService api, DatabaseRepository repository)
         {
+            _repository = repository;
             _api = api;
             _commandAggregator = commandAggregator;
             _commandAggregator.RegisterCommand(nameof(SetCurrentFilmCommand), new RelayCommand(SetCurrentFilm));
@@ -35,7 +39,7 @@ namespace Cinema.ViewModels
         public async void SetCurrentFilm(object film)
         {
             var detailedFilm = await _api.GetFilmInfoByIdAsync((film as FilmEntity).KinopoiskId);
-            CurrentFilm = detailedFilm;
+            CurrentFilm = await _repository.UpdateFilmAsync(detailedFilm);
         }
     }
 }

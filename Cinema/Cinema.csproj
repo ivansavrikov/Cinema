@@ -139,7 +139,7 @@
     <Compile Include="Services\Repositories\DatabaseRepository.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\FavoritesFilmsViewModel.cs" />
-    <Compile Include="ViewModels\FilmInfoViewModel.cs" />
+    <Compile Include="ViewModels\FilmDetailsViewModel.cs" />
     <Compile Include="ViewModels\FilmsViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="Views\FavoritesPage.xaml.cs">

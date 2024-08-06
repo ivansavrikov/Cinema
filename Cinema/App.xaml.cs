@@ -23,6 +23,8 @@ namespace Cinema
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            //Предоставленный "7d3e436f-f59c-46dd-989d-dac71211f263"
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values["KinopoiskApiKey"] = "490e41e8-3cff-4c89-aac0-44f43dbdb20e";
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
@@ -86,7 +88,7 @@ namespace Cinema
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
             services.AddSingleton<FavoritesFilmsViewModel>();
-            services.AddSingleton<FilmInfoViewModel>();
+            services.AddSingleton<FilmDetailsViewModel>();
 
             services.AddDbContext<DatabaseContext>();
 
@@ -102,7 +104,7 @@ namespace Cinema
             ServiceProvider.GetRequiredService<NavigationViewModel>();
             ServiceProvider.GetRequiredService<FilmsViewModel>();
             ServiceProvider.GetRequiredService<FavoritesFilmsViewModel>();
-            ServiceProvider.GetRequiredService<FilmInfoViewModel>();
+            ServiceProvider.GetRequiredService<FilmDetailsViewModel>();
         }
 
         private async Task InitializeDatabase()

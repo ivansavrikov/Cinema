@@ -17,7 +17,7 @@ namespace Cinema.Services
         {
             _parser = parser;
             _baseUrl = "https://kinopoiskapiunofficial.tech/";
-            _token = "7d3e436f-f59c-46dd-989d-dac71211f263";
+            _token = Windows.Storage.ApplicationData.Current.LocalSettings.Values["KinopoiskApiKey"] as string;
             _restClient = new RestClient(_baseUrl);
             _restClient.AddDefaultHeader("X-API-KEY", _token);
         }
@@ -51,6 +51,15 @@ namespace Cinema.Services
                 throw new Exception("Error retrieving film: " + response.ErrorMessage);
             var genres = _parser.ParseGenres(response.Content);
             return genres;
+        }
+
+        public async Task<byte[]> GetImageAsBytesAsync(string imageUrl)
+        {
+            var request = new RestRequest(imageUrl , Method.Get);
+            var response = await _restClient.ExecuteAsync(request);
+            if (!response.IsSuccessful)
+                throw new Exception("Error retrieving film: " + response.ErrorMessage);
+            return response.RawBytes;
         }
     }
 }

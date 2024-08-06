@@ -1,7 +1,7 @@
 ﻿using Cinema.Helpers;
 using Cinema.Models.Entities;
 using Cinema.Services;
-using System;
+using Cinema.Services.Repositories;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -11,13 +11,15 @@ namespace Cinema.ViewModels
     public class FilmsViewModel : BaseViewModel
     {
         private readonly CommandAggregator _commandAggregator;
+        private readonly DatabaseRepository _repository;
         private readonly KinopoiskApiService _api;
         public ObservableCollection<FilmEntity> Films { get; set; } = new ObservableCollection<FilmEntity>();
         public ICommand AddFilmToFavoritesCommand => _commandAggregator.GetCommand("AddFilmToFavoritesCommand");
         public ICommand GetFilmInfoCommand => _commandAggregator.GetCommand(nameof(GetFilmInfoCommand));
 
-        public FilmsViewModel(KinopoiskApiService api, CommandAggregator commandAggregator)
+        public FilmsViewModel(KinopoiskApiService api, CommandAggregator commandAggregator, DatabaseRepository repository)
         {
+            _repository = repository;
             _api = api;
             _commandAggregator = commandAggregator;
             _commandAggregator.RegisterCommand(nameof(GetFilmInfoCommand), new RelayCommand(GetFilmInfo));
@@ -27,12 +29,9 @@ namespace Cinema.ViewModels
 
         public async Task LoadFilmsAsync()
         {
-            for (int i = 1; i <= 5; i++)
-            {
-                var filmOnPage = await _api.GetFilmsOnPageAsync(i);
-                foreach (var f in filmOnPage)
-                    Films.Add(f);
-            }
+            var films = await _repository.GetAllFilmsAsync();
+            foreach (var f in films)
+                Films.Add(f);
         }
 
         public void GetFilmInfo(object film)

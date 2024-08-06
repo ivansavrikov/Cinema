@@ -9,7 +9,7 @@ namespace Cinema.Views
         public FilmInfoPage()
         {
             this.InitializeComponent();
-            this.DataContext = App.ServiceProvider.GetRequiredService<FilmInfoViewModel>();
+            this.DataContext = App.ServiceProvider.GetRequiredService<FilmDetailsViewModel>();
         }
     }
 }
