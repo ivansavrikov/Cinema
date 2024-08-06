@@ -28,7 +28,7 @@ namespace Cinema.Services
             var response = await _restClient.ExecuteAsync(request);
             if (!response.IsSuccessful)
                 throw new Exception("Error retrieving film: " + response.ErrorMessage);
-            FilmEntity film = _parser.ParseSingleFilm(response.Content);
+            FilmEntity film = await _parser.ParseSingleFilm(response.Content);
             return film;
         }
 
@@ -39,7 +39,7 @@ namespace Cinema.Services
             var response = await _restClient.ExecuteAsync(request);
             if (!response.IsSuccessful)
                 throw new Exception("Error retrieving film: " + response.ErrorMessage);
-            var films = _parser.ParseFilmCollection(response.Content);
+            var films = await _parser.ParseFilmCollection(response.Content);
             return films;
         }
 

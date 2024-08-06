@@ -1,12 +1,22 @@
 ﻿using Cinema.Models.Entities;
+using Cinema.Services.Repositories;
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Cinema.Services
 {
     public class KinopoiskParserService
     {
-        public FilmEntity ParseSingleFilm(string jsonString)
+        private DatabaseRepository _repository;
+
+        public KinopoiskParserService(DatabaseRepository repository)
+        {
+            _repository = repository;
+        }
+
+        public async Task<FilmEntity> ParseSingleFilm(string jsonString)
         {
             FilmEntity film = new FilmEntity();
             using (JsonDocument doc = JsonDocument.Parse(jsonString))
@@ -28,22 +38,23 @@ namespace Cinema.Services
 
                 film.Year = root.GetProperty("year").GetInt16();
 
-                //var genres = new List<GenreEntity>();
-                //JsonElement jsonGenresArray = root.GetProperty("genres");
-                //foreach (JsonElement jsonGenre in jsonGenresArray.EnumerateArray())
-                //{
-                //    GenreEntity genre = new GenreEntity();
-                //    genre.Title = jsonGenre.GetProperty("genre").GetString();
-                //    genres.Add(genre);
-                //}
+                JsonElement jsonGenresArray = root.GetProperty("genres");
+                foreach (JsonElement jsonGenre in jsonGenresArray.EnumerateArray())
+                {
+                    var genreName = jsonGenre.GetProperty("genre").GetString();
+                    var genre = await _repository.GetGenreByNameAsync(genreName);
 
-                //film.Genres = genres;
+                    if (genre == null)
+                        throw new Exception("API вернул фильм с жанром, которого нет в базе данных");
+
+                    film.FilmGenres.Add(new FilmGenre { Film = film, Genre = genre });
+                }
             }
 
             return film;
         }
 
-        public List<FilmEntity> ParseFilmCollection(string jsonString)
+        public async Task<List<FilmEntity>> ParseFilmCollection(string jsonString)
         {
             List<FilmEntity> films = new List<FilmEntity>();
 
@@ -51,7 +62,7 @@ namespace Cinema.Services
             {
                 foreach (JsonElement jsonFilm in doc.RootElement.GetProperty("items").EnumerateArray())
                 {
-                    FilmEntity film = ParseSingleFilm(jsonFilm.ToString());
+                    FilmEntity film = await ParseSingleFilm(jsonFilm.ToString());
                     films.Add(film);
                 }
             }
@@ -70,7 +81,7 @@ namespace Cinema.Services
                 {
                     GenreEntity genre = new GenreEntity();
                     genre.Title = jsonGenre.GetProperty("genre").GetString();
-                    genre.KinopoiskId = jsonGenre.GetProperty("id").GetString();
+                    genre.KinopoiskId = jsonGenre.GetProperty("id").GetInt32();
                     genres.Add(genre);
                 }
             }

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Cinema.Models.EntityConfigurations
 {
-    public class FilmGenreConfiguration : IEntityTypeConfiguration<FilmGenreEntity>
+    public class FilmGenreConfiguration : IEntityTypeConfiguration<FilmGenre>
     {
-        public void Configure(EntityTypeBuilder<FilmGenreEntity> builder)
+        public void Configure(EntityTypeBuilder<FilmGenre> builder)
         {
             builder.HasKey(fg => new { fg.FilmId, fg.GenreId });
 

@@ -8,11 +8,17 @@ namespace Cinema.Models.EntityConfigurations
     {
         public void Configure(EntityTypeBuilder<FilmEntity> builder)
         {
-            builder.HasKey(e => e.Id);
+            builder
+                .HasKey(e => e.Id);
 
             builder.HasMany(f => f.FilmGenres)
                 .WithOne(fg => fg.Film)
                 .HasForeignKey(fg => fg.FilmId);
+
+            builder
+                .HasMany(f => f.UserFilms)
+                .WithOne(uf => uf.Film)
+                .HasForeignKey(uf => uf.FilmId);
         }
     }
 }

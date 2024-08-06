@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Cinema.Models.Database;
 using Cinema.Services;
+using Cinema.Services.Repositories;
 using Cinema.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,8 +30,8 @@ namespace Cinema
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             ServiceProvider = serviceCollection.BuildServiceProvider();
+            Task.Run(async () => await InitializeDatabase()).GetAwaiter().GetResult();
             InitializeServises();
-            InitializeDatabase();
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -78,6 +81,7 @@ namespace Cinema
 
         private void ConfigureServices(IServiceCollection services)
         {
+            //TODO: Подумать над временем жизни сервисов!!!!
             services.AddSingleton<CommandAggregator>();
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
@@ -88,6 +92,8 @@ namespace Cinema
 
             services.AddSingleton<KinopoiskParserService>();
             services.AddSingleton<KinopoiskApiService>();
+            services.AddSingleton<DatabaseRepository>();
+            services.AddSingleton<DatabaseFillService>();
         }
 
         private void InitializeServises()
@@ -99,10 +105,15 @@ namespace Cinema
             ServiceProvider.GetRequiredService<FilmInfoViewModel>();
         }
 
-        private void InitializeDatabase()
+        private async Task InitializeDatabase()
         {
             var dbContext = ServiceProvider.GetRequiredService<DatabaseContext>();
-            dbContext.Database.Migrate();
+            await dbContext.Database.EnsureCreatedAsync();
+            if (!dbContext.Users.Any())
+            {
+                var fillService = ServiceProvider.GetRequiredService<DatabaseFillService>();
+                await fillService.FillStartDataToDatabaseAsync();
+            }
         }
     }
 }

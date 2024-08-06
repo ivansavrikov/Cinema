@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace Cinema.Models.Entities
+﻿namespace Cinema.Models.Entities
 {
-    public class FilmGenreEntity
+    public class FilmGenre
     {
         public int FilmId { get; set; }
         public int GenreId { get; set; }

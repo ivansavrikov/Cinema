@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Cinema.Models.Database.Entities;
+using System.Collections.Generic;
 
 namespace Cinema.Models.Entities
 {
@@ -10,7 +11,7 @@ namespace Cinema.Models.Entities
         public string Description { get; set; }
         public short Year { get; set; }
         public string PosterUrl { get; set; }
-
-        public List<FilmGenreEntity> FilmGenres { get; set; } = new List<FilmGenreEntity>();
+        public List<FilmGenre> FilmGenres { get; set; } = new List<FilmGenre>();
+        public List<UserFilm> UserFilms { get; set; } = new List<UserFilm>();
     }
 }
