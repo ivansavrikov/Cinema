@@ -2,27 +2,30 @@
 using Cinema.Models.Entities;
 using Cinema.Services;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.UI.Xaml;
 
 namespace Cinema.ViewModels
 {
     public class FilmsViewModel : BaseViewModel
     {
+        private NavigationViewModel _navViewModel;
         public event Action<FilmEntity> AddedToFavoritesEvent;
+        public event Action<FilmEntity> GetFilmInfoEvent;
         public ICommand AddToFavoritesCommand { get; }
+        public ICommand GetFilmInfoCommand { get; }
+
         public ObservableCollection<FilmEntity> Films { get; set; } = new ObservableCollection<FilmEntity>();
 
         private KinopoiskApiService _api;
-        public FilmsViewModel(KinopoiskApiService api)
+        public FilmsViewModel(KinopoiskApiService api, NavigationViewModel navViewModel)
         {
             _api = api;
+            _navViewModel = navViewModel;
             Task.Run(async () => await LoadFilmsAsync()).GetAwaiter().GetResult();
             AddToFavoritesCommand = new RelayCommand(AddToFavorites);
+            GetFilmInfoCommand = new RelayCommand(GetFilmInfo);
         }
 
         public async Task LoadFilmsAsync()
@@ -40,6 +43,14 @@ namespace Cinema.ViewModels
             if (AddedToFavoritesEvent == null)
                 return;
             AddedToFavoritesEvent.Invoke(film as FilmEntity);
+        }
+
+        public void GetFilmInfo(object film)
+        {
+            _navViewModel.NavigateCommand.Execute("filmInfoPage");
+            if (GetFilmInfoEvent == null)
+                return;
+            GetFilmInfoEvent.Invoke(film as FilmEntity);
         }
     }
 }

@@ -19,15 +19,15 @@ namespace Cinema.ViewModels
                 OnPropertyChanged();
             }
 		}
-        public ICommand ItemTappedCommand { get; }
+        public ICommand NavigateCommand { get; }
 
         public NavigationViewModel()
         {
             CurrentPageType = typeof(FilmsPage);
-            ItemTappedCommand = new RelayCommand(OnItemTapped);
+            NavigateCommand = new RelayCommand(Navigate);
         }
 
-        private void OnItemTapped(object pageTag)
+        private void Navigate(object pageTag)
         {
 			switch (pageTag.ToString())
 			{
@@ -41,6 +41,10 @@ namespace Cinema.ViewModels
 
 				case "filtersPage":
                     CurrentPageType = typeof(FiltersPage);
+                    break;
+
+                case "filmInfoPage":
+                    CurrentPageType = typeof(FilmInfoPage);
                     break;
 				default:
 					break;

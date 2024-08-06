@@ -100,6 +100,7 @@ namespace Cinema
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
             services.AddSingleton<FavoritesFilmsViewModel>();
+            services.AddSingleton<FilmInfoViewModel>();
 
             services.AddSingleton<KinopoiskParserService>();
             services.AddSingleton<KinopoiskApiService>();

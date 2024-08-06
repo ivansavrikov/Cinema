@@ -21,7 +21,7 @@
                 <NavigationViewItem Content="All" Icon="ViewAll">
                     <behaviors:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Tapped">
-                            <core:InvokeCommandAction Command="{Binding ItemTappedCommand}" CommandParameter="filmsPage" />
+                            <core:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="filmsPage" />
                         </core:EventTriggerBehavior>
                     </behaviors:Interaction.Behaviors>
                 </NavigationViewItem>
@@ -29,7 +29,7 @@
                 <NavigationViewItem Content="Favorites" Icon="Favorite">
                     <behaviors:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Tapped">
-                            <core:InvokeCommandAction Command="{Binding ItemTappedCommand}" CommandParameter="favoritesPage" />
+                            <core:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="favoritesPage" />
                         </core:EventTriggerBehavior>
                     </behaviors:Interaction.Behaviors>
                 </NavigationViewItem>
@@ -37,7 +37,7 @@
                 <NavigationViewItem Content="Filters" Icon="Filter">
                     <behaviors:Interaction.Behaviors>
                         <core:EventTriggerBehavior EventName="Tapped">
-                            <core:InvokeCommandAction Command="{Binding ItemTappedCommand}" CommandParameter="filtersPage" />
+                            <core:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="filtersPage" />
                         </core:EventTriggerBehavior>
                     </behaviors:Interaction.Behaviors>
                 </NavigationViewItem>

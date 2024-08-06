@@ -26,6 +26,10 @@
                             Command="{Binding DataContext.AddToFavoritesCommand, ElementName=PageRoot}"
                             CommandParameter="{Binding}"
                             Content="В избранное" />
+                        <Button
+                            Command="{Binding DataContext.GetFilmInfoCommand, ElementName=PageRoot}"
+                            CommandParameter="{Binding}"
+                            Content="Подробнее" />
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>
