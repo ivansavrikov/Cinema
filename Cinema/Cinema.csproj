@@ -12,7 +12,7 @@
     <DefaultLanguage>ru-RU</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
-	<LangVersion>latest</LangVersion>
+    <LangVersion>latest</LangVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -128,6 +128,11 @@
     <Compile Include="Models\Database\Entities\FilmEntity.cs" />
     <Compile Include="Models\Database\Entities\FilmGenreEntity.cs" />
     <Compile Include="Models\Database\Entities\GenreEntity.cs" />
+    <Compile Include="Models\Database\Migrations\20240806131854_InitialCreate.cs" />
+    <Compile Include="Models\Database\Migrations\20240806131854_InitialCreate.Designer.cs">
+      <DependentUpon>20240806131854_InitialCreate.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Database\Migrations\DatabaseContextModelSnapshot.cs" />
     <Compile Include="Services\CommandAggregator.cs" />
     <Compile Include="Services\KinopoiskApiService.cs" />
     <Compile Include="Services\KinopoiskParserService.cs" />

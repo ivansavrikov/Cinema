@@ -1,6 +1,12 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
+using System.Reflection;
+using Cinema.Models.Database;
 using Cinema.Services;
 using Cinema.ViewModels;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Scaffolding.Metadata;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -25,7 +31,8 @@ namespace Cinema
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             ServiceProvider = serviceCollection.BuildServiceProvider();
-            InitializeServises(ServiceProvider);
+            InitializeServises();
+            InitializeDatabase();
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -81,17 +88,25 @@ namespace Cinema
             services.AddSingleton<FavoritesFilmsViewModel>();
             services.AddSingleton<FilmInfoViewModel>();
 
+            services.AddDbContext<DatabaseContext>();
+
             services.AddSingleton<KinopoiskParserService>();
             services.AddSingleton<KinopoiskApiService>();
         }
 
-        private void InitializeServises(IServiceProvider serviceProvider)
+        private void InitializeServises()
         {
-            serviceProvider.GetRequiredService<CommandAggregator>();
-            serviceProvider.GetRequiredService<NavigationViewModel>();
-            serviceProvider.GetRequiredService<FilmsViewModel>();
-            serviceProvider.GetRequiredService<FavoritesFilmsViewModel>();
-            serviceProvider.GetRequiredService<FilmInfoViewModel>();
+            ServiceProvider.GetRequiredService<CommandAggregator>();
+            ServiceProvider.GetRequiredService<NavigationViewModel>();
+            ServiceProvider.GetRequiredService<FilmsViewModel>();
+            ServiceProvider.GetRequiredService<FavoritesFilmsViewModel>();
+            ServiceProvider.GetRequiredService<FilmInfoViewModel>();
+        }
+
+        private void InitializeDatabase()
+        {
+            var dbContext = ServiceProvider.GetRequiredService<DatabaseContext>();
+            dbContext.Database.Migrate();
         }
     }
 }
