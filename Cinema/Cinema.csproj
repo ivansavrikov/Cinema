@@ -136,6 +136,7 @@
     <Compile Include="Services\CommandAggregator.cs" />
     <Compile Include="Services\KinopoiskApiService.cs" />
     <Compile Include="Services\KinopoiskParserService.cs" />
+    <Compile Include="Services\Repositories\DatabaseRepository.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
     <Compile Include="ViewModels\FavoritesFilmsViewModel.cs" />
     <Compile Include="ViewModels\FilmInfoViewModel.cs" />
