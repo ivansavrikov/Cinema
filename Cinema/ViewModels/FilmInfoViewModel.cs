@@ -24,6 +24,7 @@ namespace Cinema.ViewModels
         }
 
         public ICommand SetCurrentFilmCommand => _commandAggregator.GetCommand(nameof(SetCurrentFilmCommand));
+        public ICommand AddFilmToFavoritesCommand => _commandAggregator.GetCommand("AddFilmToFavoritesCommand");
         public FilmInfoViewModel(CommandAggregator commandAggregator, KinopoiskApiService api)
         {
             _api = api;

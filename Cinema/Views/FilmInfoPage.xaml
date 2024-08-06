@@ -5,6 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Cinema.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="PageRoot"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
@@ -29,7 +30,10 @@
             <TextBlock Text="{Binding CurrentFilm.Title}" />
             <TextBlock Text="{Binding CurrentFilm.Year}" />
             <TextBlock Text="{Binding CurrentFilm.Description}" TextWrapping="Wrap" />
-            <Button Content="В избранное" />
+            <Button
+                Command="{Binding DataContext.AddFilmToFavoritesCommand, ElementName=PageRoot}"
+                CommandParameter="{Binding CurrentFilm}"
+                Content="В избранное" />
         </StackPanel>
     </Grid>
 </Page>
