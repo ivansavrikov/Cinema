@@ -7,6 +7,7 @@ namespace Cinema.Models.Entities
         public int Id { get; set; }
         public string KinopoiskId { get; set; }
         public string Title { get; set; }
-        public List<FilmEntity> Films { get; set; } = new List<FilmEntity>();
+
+        public List<FilmGenreEntity> FilmGenres { get; set; } = new List<FilmGenreEntity>();
     }
 }

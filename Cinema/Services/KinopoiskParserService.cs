@@ -28,16 +28,16 @@ namespace Cinema.Services
 
                 film.Year = root.GetProperty("year").GetInt16();
 
-                var genres = new List<GenreEntity>();
-                JsonElement jsonGenresArray = root.GetProperty("genres");
-                foreach (JsonElement jsonGenre in jsonGenresArray.EnumerateArray())
-                {
-                    GenreEntity genre = new GenreEntity();
-                    genre.Title = jsonGenre.GetProperty("genre").GetString();
-                    genres.Add(genre);
-                }
+                //var genres = new List<GenreEntity>();
+                //JsonElement jsonGenresArray = root.GetProperty("genres");
+                //foreach (JsonElement jsonGenre in jsonGenresArray.EnumerateArray())
+                //{
+                //    GenreEntity genre = new GenreEntity();
+                //    genre.Title = jsonGenre.GetProperty("genre").GetString();
+                //    genres.Add(genre);
+                //}
 
-                film.Genres = genres;
+                //film.Genres = genres;
             }
 
             return film;

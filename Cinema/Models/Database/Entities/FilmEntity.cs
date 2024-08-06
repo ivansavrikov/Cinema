@@ -10,6 +10,7 @@ namespace Cinema.Models.Entities
         public string Description { get; set; }
         public short Year { get; set; }
         public string PosterUrl { get; set; }
-        public List<GenreEntity> Genres { get; set; } = new List<GenreEntity>();
+
+        public List<FilmGenreEntity> FilmGenres { get; set; } = new List<FilmGenreEntity>();
     }
 }
