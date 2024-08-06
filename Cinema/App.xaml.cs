@@ -1,5 +1,11 @@
 ﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Cinema.Models.Database;
+using Cinema.Services;
+using Cinema.Services.Repositories;
 using Cinema.ViewModels;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -9,32 +15,25 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Cinema
 {
-    /// <summary>
-    /// Обеспечивает зависящее от конкретного приложения поведение, дополняющее класс Application по умолчанию.
-    /// </summary>
     sealed partial class App : Application
     {
         public static IServiceProvider ServiceProvider { get; private set; }
-        /// <summary>
-        /// Инициализирует одноэлементный объект приложения. Это первая выполняемая строка разрабатываемого
-        /// кода, поэтому она является логическим эквивалентом main() или WinMain().
-        /// </summary>
+
         public App()
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            //Предоставленный "7d3e436f-f59c-46dd-989d-dac71211f263"
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values["KinopoiskApiKey"] = "490e41e8-3cff-4c89-aac0-44f43dbdb20e";
         }
 
-        /// <summary>
-        /// Вызывается при обычном запуске приложения пользователем. Будут использоваться другие точки входа,
-        /// например, если приложение запускается для открытия конкретного файла.
-        /// </summary>
-        /// <param name="e">Сведения о запросе и обработке запуска.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             ServiceProvider = serviceCollection.BuildServiceProvider();
+            Task.Run(async () => await InitializeDatabase()).GetAwaiter().GetResult();
+            InitializeServises();
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -70,23 +69,11 @@ namespace Cinema
             }
         }
 
-        /// <summary>
-        /// Вызывается в случае сбоя навигации на определенную страницу
-        /// </summary>
-        /// <param name="sender">Фрейм, для которого произошел сбой навигации</param>
-        /// <param name="e">Сведения о сбое навигации</param>
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        /// <summary>
-        /// Вызывается при приостановке выполнения приложения.  Состояние приложения сохраняется
-        /// без учета информации о том, будет ли оно завершено или возобновлено с неизменным
-        /// содержимым памяти.
-        /// </summary>
-        /// <param name="sender">Источник запроса приостановки.</param>
-        /// <param name="e">Сведения о запросе приостановки.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
@@ -96,8 +83,39 @@ namespace Cinema
 
         private void ConfigureServices(IServiceCollection services)
         {
+            //TODO: Подумать над временем жизни сервисов!!!!
+            services.AddSingleton<CommandAggregator>();
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
+            services.AddSingleton<FavoritesFilmsViewModel>();
+            services.AddSingleton<FilmDetailsViewModel>();
+
+            services.AddDbContext<DatabaseContext>();
+
+            services.AddSingleton<KinopoiskParserService>();
+            services.AddSingleton<KinopoiskApiService>();
+            services.AddSingleton<DatabaseRepository>();
+            services.AddSingleton<DatabaseFillService>();
+        }
+
+        private void InitializeServises()
+        {
+            ServiceProvider.GetRequiredService<CommandAggregator>();
+            ServiceProvider.GetRequiredService<NavigationViewModel>();
+            ServiceProvider.GetRequiredService<FilmsViewModel>();
+            ServiceProvider.GetRequiredService<FavoritesFilmsViewModel>();
+            ServiceProvider.GetRequiredService<FilmDetailsViewModel>();
+        }
+
+        private async Task InitializeDatabase()
+        {
+            var dbContext = ServiceProvider.GetRequiredService<DatabaseContext>();
+            await dbContext.Database.EnsureCreatedAsync();
+            if (!dbContext.Users.Any())
+            {
+                var fillService = ServiceProvider.GetRequiredService<DatabaseFillService>();
+                await fillService.FillStartDataToDatabaseAsync();
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Cinema.Helpers;
+using Cinema.Services;
 using Cinema.Views;
 using System;
 using System.Windows.Input;
@@ -7,6 +8,7 @@ namespace Cinema.ViewModels
 {
     public class NavigationViewModel : BaseViewModel
     {
+        private CommandAggregator _commandAggregator;
         private Type _currentPageType;
         public Type CurrentPageType
 		{
@@ -19,15 +21,16 @@ namespace Cinema.ViewModels
                 OnPropertyChanged();
             }
 		}
-        public ICommand ItemTappedCommand { get; }
-
-        public NavigationViewModel()
+        public ICommand NavigateCommand => _commandAggregator.GetCommand(nameof(NavigateCommand));
+        public NavigationViewModel(CommandAggregator commandAggregator)
         {
+            _commandAggregator = commandAggregator;
+            _commandAggregator.RegisterCommand(nameof(NavigateCommand), new RelayCommand(Navigate));
+
             CurrentPageType = typeof(FilmsPage);
-            ItemTappedCommand = new RelayCommand(OnItemTapped);
         }
 
-        private void OnItemTapped(object pageTag)
+        private void Navigate(object pageTag)
         {
 			switch (pageTag.ToString())
 			{
@@ -41,6 +44,10 @@ namespace Cinema.ViewModels
 
 				case "filtersPage":
                     CurrentPageType = typeof(FiltersPage);
+                    break;
+
+                case "filmInfoPage":
+                    CurrentPageType = typeof(FilmInfoPage);
                     break;
 				default:
 					break;

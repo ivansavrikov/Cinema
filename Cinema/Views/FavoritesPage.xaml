@@ -5,10 +5,28 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:local="using:Cinema.Views"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="PageRoot"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
     mc:Ignorable="d">
 
     <Grid>
-        <CheckBox>FavoritesPage</CheckBox>
+        <GridView ItemsSource="{Binding FavoritesFilms}">
+            <GridView.ItemTemplate>
+                <DataTemplate>
+                    <StackPanel>
+                        <Image
+                            Width="300"
+                            Height="400"
+                            Source="{Binding PosterUrl}" />
+                        <TextBlock Text="{Binding Title}" />
+                        <TextBlock Text="{Binding Year}" />
+                        <Button
+                            Command="{Binding DataContext.GetFilmInfoCommand, ElementName=PageRoot}"
+                            CommandParameter="{Binding}"
+                            Content="Подробнее" />
+                    </StackPanel>
+                </DataTemplate>
+            </GridView.ItemTemplate>
+        </GridView>
     </Grid>
 </Page>

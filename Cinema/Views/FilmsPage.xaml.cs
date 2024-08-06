@@ -1,4 +1,5 @@
 ﻿using Cinema.ViewModels;
+using Microsoft.Extensions.DependencyInjection;
 using Windows.UI.Xaml.Controls;
 
 namespace Cinema.Views
@@ -8,7 +9,7 @@ namespace Cinema.Views
         public FilmsPage()
         {
             this.InitializeComponent();
-            this.DataContext = App.ServiceProvider.GetService(typeof(FilmsViewModel));
+            this.DataContext = App.ServiceProvider.GetRequiredService<FilmsViewModel>();
         }
     }
 }

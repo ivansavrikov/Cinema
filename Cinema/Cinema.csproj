@@ -12,6 +12,7 @@
     <DefaultLanguage>ru-RU</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion Condition=" '$(TargetPlatformVersion)' == '' ">10.0.22621.0</TargetPlatformVersion>
+    <LangVersion>latest</LangVersion>
     <TargetPlatformMinVersion>10.0.17763.0</TargetPlatformMinVersion>
     <MinimumVisualStudioVersion>14</MinimumVisualStudioVersion>
     <FileAlignment>512</FileAlignment>
@@ -116,16 +117,29 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Abstractions\CinematicContent.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\RelayCommand.cs" />
-    <Compile Include="Interfaces\ICinemaRepository.cs" />
-    <Compile Include="Models\Movie.cs" />
-    <Compile Include="Models\Serial.cs" />
-    <Compile Include="Repositories\KinopoiskRepository.cs" />
+    <Compile Include="Models\Database\DatabaseContext.cs" />
+    <Compile Include="Models\Database\EntitiesConfigurations\FilmConfiguration.cs" />
+    <Compile Include="Models\Database\EntitiesConfigurations\FilmGenreConfiguration.cs" />
+    <Compile Include="Models\Database\EntitiesConfigurations\GenreConfiguration.cs" />
+    <Compile Include="Models\Database\EntitiesConfigurations\UserConfiguration.cs" />
+    <Compile Include="Models\Database\EntitiesConfigurations\UserFilmConfiguration.cs" />
+    <Compile Include="Models\Database\Entities\FilmEntity.cs" />
+    <Compile Include="Models\Database\Entities\FilmGenre.cs" />
+    <Compile Include="Models\Database\Entities\GenreEntity.cs" />
+    <Compile Include="Models\Database\Entities\UserEntity.cs" />
+    <Compile Include="Models\Database\Entities\UserFilm.cs" />
+    <Compile Include="Services\CommandAggregator.cs" />
+    <Compile Include="Services\DatabaseFillService.cs" />
+    <Compile Include="Services\KinopoiskApiService.cs" />
+    <Compile Include="Services\KinopoiskParserService.cs" />
+    <Compile Include="Services\Repositories\DatabaseRepository.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\FavoritesFilmsViewModel.cs" />
+    <Compile Include="ViewModels\FilmDetailsViewModel.cs" />
     <Compile Include="ViewModels\FilmsViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="Views\FavoritesPage.xaml.cs">
@@ -187,6 +201,12 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore">
+      <Version>3.1.32</Version>
+    </PackageReference>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite">
+      <Version>3.1.32</Version>
+    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection">
       <Version>8.0.0</Version>
     </PackageReference>
@@ -196,14 +216,14 @@
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
     </PackageReference>
+    <PackageReference Include="RestSharp">
+      <Version>111.4.1</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <None Include="Abstractions\.gitkeep" />
     <None Include="Interfaces\.gitkeep" />
     <None Include="Models\.gitkeep" />
-    <None Include="Repositories\.gitkeep" />
-    <None Include="Resources\.gitkeep" />
     <None Include="ViewModels\.gitkeep" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
