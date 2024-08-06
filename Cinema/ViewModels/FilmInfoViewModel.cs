@@ -1,9 +1,14 @@
-﻿using Cinema.Models.Entities;
+﻿using Cinema.Helpers;
+using Cinema.Models.Entities;
+using Cinema.Services;
+using System.Windows.Input;
 
 namespace Cinema.ViewModels
 {
     public class FilmInfoViewModel : BaseViewModel
     {
+        private readonly KinopoiskApiService _api;
+        private readonly CommandAggregator _commandAggregator;
         private FilmEntity _currentFilm;
         public FilmEntity CurrentFilm
         {
@@ -18,14 +23,18 @@ namespace Cinema.ViewModels
             }
         }
 
-        public FilmInfoViewModel(FilmsViewModel filmsViewModel)
+        public ICommand SetCurrentFilmCommand => _commandAggregator.GetCommand(nameof(SetCurrentFilmCommand));
+        public FilmInfoViewModel(CommandAggregator commandAggregator, KinopoiskApiService api)
         {
-            filmsViewModel.GetFilmInfoEvent += SetCurrentFilm;
+            _api = api;
+            _commandAggregator = commandAggregator;
+            _commandAggregator.RegisterCommand(nameof(SetCurrentFilmCommand), new RelayCommand(SetCurrentFilm));
         }
 
-        public void SetCurrentFilm(object film)
+        public async void SetCurrentFilm(object film)
         {
-            CurrentFilm = film as FilmEntity;
+            var detailedFilm = await _api.GetFilmInfoByIdAsync((film as FilmEntity).KinopoiskId);
+            CurrentFilm = detailedFilm;
         }
     }
 }

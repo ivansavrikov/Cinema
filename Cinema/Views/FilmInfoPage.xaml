@@ -28,6 +28,7 @@
                 Source="{Binding CurrentFilm.PosterUrl}" />
             <TextBlock Text="{Binding CurrentFilm.Title}" />
             <TextBlock Text="{Binding CurrentFilm.Year}" />
+            <TextBlock Text="{Binding CurrentFilm.Description}" TextWrapping="Wrap" />
             <Button Content="В избранное" />
         </StackPanel>
     </Grid>

@@ -10,22 +10,20 @@ namespace Cinema.ViewModels
 {
     public class FilmsViewModel : BaseViewModel
     {
-        private NavigationViewModel _navViewModel;
-        public event Action<FilmEntity> AddedToFavoritesEvent;
-        public event Action<FilmEntity> GetFilmInfoEvent;
-        public ICommand AddToFavoritesCommand { get; }
-        public ICommand GetFilmInfoCommand { get; }
-
+        private readonly CommandAggregator _commandAggregator;
+        private readonly KinopoiskApiService _api;
         public ObservableCollection<FilmEntity> Films { get; set; } = new ObservableCollection<FilmEntity>();
+        public ICommand AddToFavoritesCommand => _commandAggregator.GetCommand(nameof(AddToFavoritesCommand));
+        public ICommand GetFilmInfoCommand => _commandAggregator.GetCommand(nameof(GetFilmInfoCommand));
 
-        private KinopoiskApiService _api;
-        public FilmsViewModel(KinopoiskApiService api, NavigationViewModel navViewModel)
+        public FilmsViewModel(KinopoiskApiService api, CommandAggregator commandAggregator)
         {
             _api = api;
-            _navViewModel = navViewModel;
+            _commandAggregator = commandAggregator;
+            _commandAggregator.RegisterCommand(nameof(AddToFavoritesCommand), new RelayCommand(AddToFavorites));
+            _commandAggregator.RegisterCommand(nameof(GetFilmInfoCommand), new RelayCommand(GetFilmInfo));
+
             Task.Run(async () => await LoadFilmsAsync()).GetAwaiter().GetResult();
-            AddToFavoritesCommand = new RelayCommand(AddToFavorites);
-            GetFilmInfoCommand = new RelayCommand(GetFilmInfo);
         }
 
         public async Task LoadFilmsAsync()
@@ -40,17 +38,13 @@ namespace Cinema.ViewModels
 
         public void AddToFavorites(object film)
         {
-            if (AddedToFavoritesEvent == null)
-                return;
-            AddedToFavoritesEvent.Invoke(film as FilmEntity);
+            _commandAggregator.GetCommand("AddFilmToFavoritesCommand").Execute(film);
         }
 
         public void GetFilmInfo(object film)
         {
-            _navViewModel.NavigateCommand.Execute("filmInfoPage");
-            if (GetFilmInfoEvent == null)
-                return;
-            GetFilmInfoEvent.Invoke(film as FilmEntity);
+            _commandAggregator.GetCommand("NavigateCommand").Execute("filmInfoPage");
+            _commandAggregator.GetCommand("SetCurrentFilmCommand").Execute(film);
         }
     }
 }

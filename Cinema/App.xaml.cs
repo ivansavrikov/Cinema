@@ -10,32 +10,22 @@ using Windows.UI.Xaml.Navigation;
 
 namespace Cinema
 {
-    /// <summary>
-    /// Обеспечивает зависящее от конкретного приложения поведение, дополняющее класс Application по умолчанию.
-    /// </summary>
     sealed partial class App : Application
     {
         public static IServiceProvider ServiceProvider { get; private set; }
-        /// <summary>
-        /// Инициализирует одноэлементный объект приложения. Это первая выполняемая строка разрабатываемого
-        /// кода, поэтому она является логическим эквивалентом main() или WinMain().
-        /// </summary>
+
         public App()
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
         }
 
-        /// <summary>
-        /// Вызывается при обычном запуске приложения пользователем. Будут использоваться другие точки входа,
-        /// например, если приложение запускается для открытия конкретного файла.
-        /// </summary>
-        /// <param name="e">Сведения о запросе и обработке запуска.</param>
         protected override void OnLaunched(LaunchActivatedEventArgs e)
         {
             var serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
             ServiceProvider = serviceCollection.BuildServiceProvider();
+            InitializeServises(ServiceProvider);
 
             Frame rootFrame = Window.Current.Content as Frame;
 
@@ -71,23 +61,11 @@ namespace Cinema
             }
         }
 
-        /// <summary>
-        /// Вызывается в случае сбоя навигации на определенную страницу
-        /// </summary>
-        /// <param name="sender">Фрейм, для которого произошел сбой навигации</param>
-        /// <param name="e">Сведения о сбое навигации</param>
         void OnNavigationFailed(object sender, NavigationFailedEventArgs e)
         {
             throw new Exception("Failed to load Page " + e.SourcePageType.FullName);
         }
 
-        /// <summary>
-        /// Вызывается при приостановке выполнения приложения.  Состояние приложения сохраняется
-        /// без учета информации о том, будет ли оно завершено или возобновлено с неизменным
-        /// содержимым памяти.
-        /// </summary>
-        /// <param name="sender">Источник запроса приостановки.</param>
-        /// <param name="e">Сведения о запросе приостановки.</param>
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
@@ -97,6 +75,7 @@ namespace Cinema
 
         private void ConfigureServices(IServiceCollection services)
         {
+            services.AddSingleton<CommandAggregator>();
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
             services.AddSingleton<FavoritesFilmsViewModel>();
@@ -104,6 +83,15 @@ namespace Cinema
 
             services.AddSingleton<KinopoiskParserService>();
             services.AddSingleton<KinopoiskApiService>();
+        }
+
+        private void InitializeServises(IServiceProvider serviceProvider)
+        {
+            serviceProvider.GetRequiredService<CommandAggregator>();
+            serviceProvider.GetRequiredService<NavigationViewModel>();
+            serviceProvider.GetRequiredService<FilmsViewModel>();
+            serviceProvider.GetRequiredService<FavoritesFilmsViewModel>();
+            serviceProvider.GetRequiredService<FilmInfoViewModel>();
         }
     }
 }
