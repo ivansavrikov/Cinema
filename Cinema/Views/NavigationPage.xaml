@@ -1,0 +1,51 @@
+﻿<Page
+    x:Class="Cinema.NavigationPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:behaviors="using:Microsoft.Xaml.Interactivity"
+    xmlns:core="using:Microsoft.Xaml.Interactions.Core"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="using:Cinema"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"
+    mc:Ignorable="d">
+
+    <Grid>
+        <NavigationView
+            x:Name="NavView"
+            IsBackButtonVisible="Collapsed"
+            IsSettingsVisible="False"
+            PaneDisplayMode="Left">
+            <NavigationView.MenuItems>
+
+                <NavigationViewItem Content="All" Icon="ViewAll">
+                    <behaviors:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Tapped">
+                            <core:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="filmsPage" />
+                        </core:EventTriggerBehavior>
+                    </behaviors:Interaction.Behaviors>
+                </NavigationViewItem>
+
+                <NavigationViewItem Content="Favorites" Icon="Favorite">
+                    <behaviors:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Tapped">
+                            <core:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="favoritesPage" />
+                        </core:EventTriggerBehavior>
+                    </behaviors:Interaction.Behaviors>
+                </NavigationViewItem>
+
+                <NavigationViewItem Content="Filters" Icon="Filter">
+                    <behaviors:Interaction.Behaviors>
+                        <core:EventTriggerBehavior EventName="Tapped">
+                            <core:InvokeCommandAction Command="{Binding NavigateCommand}" CommandParameter="filtersPage" />
+                        </core:EventTriggerBehavior>
+                    </behaviors:Interaction.Behaviors>
+                </NavigationViewItem>
+
+            </NavigationView.MenuItems>
+
+            <Frame x:Name="ContentFrame" SourcePageType="{Binding CurrentPageType, Mode=TwoWay}" />
+
+        </NavigationView>
+    </Grid>
+</Page>
