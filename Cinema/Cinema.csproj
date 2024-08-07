@@ -145,8 +145,8 @@
     <Compile Include="Views\FavoritesPage.xaml.cs">
       <DependentUpon>FavoritesPage.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Views\FilmInfoPage.xaml.cs">
-      <DependentUpon>FilmInfoPage.xaml</DependentUpon>
+    <Compile Include="Views\FilmDetailsPage.xaml.cs">
+      <DependentUpon>FilmDetailsPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\FilmsPage.xaml.cs">
       <DependentUpon>FilmsPage.xaml</DependentUpon>
@@ -183,7 +183,7 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Views\FilmInfoPage.xaml">
+    <Page Include="Views\FilmDetailsPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
