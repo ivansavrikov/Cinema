@@ -9,6 +9,6 @@
     mc:Ignorable="d">
 
     <Grid>
-        <CheckBox>filtersPage</CheckBox>
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center">В ожидании своего лучшего часа</TextBlock>
     </Grid>
 </Page>

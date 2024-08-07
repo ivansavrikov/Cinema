@@ -1,11 +1,11 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Cinema.Models.Database;
 using Cinema.Services;
 using Cinema.Services.Repositories;
 using Cinema.ViewModels;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
@@ -23,8 +23,8 @@ namespace Cinema
         {
             this.InitializeComponent();
             this.Suspending += OnSuspending;
-            //Предоставленный "7d3e436f-f59c-46dd-989d-dac71211f263"
-            Windows.Storage.ApplicationData.Current.LocalSettings.Values["KinopoiskApiKey"] = "490e41e8-3cff-4c89-aac0-44f43dbdb20e";
+            //Предоставленный ключ "7d3e436f-f59c-46dd-989d-dac71211f263"
+            Windows.Storage.ApplicationData.Current.LocalSettings.Values["KinopoiskApiKey"] = "490e41e8-3cff-4c89-aac0-44f43dbdb20e"; //Личный ключ
         }
 
         protected override void OnLaunched(LaunchActivatedEventArgs e)
@@ -37,21 +37,12 @@ namespace Cinema
 
             Frame rootFrame = Window.Current.Content as Frame;
 
-            // Не повторяйте инициализацию приложения, если в окне уже имеется содержимое,
-            // только обеспечьте активность окна
             if (rootFrame == null)
             {
-                // Создание фрейма, который станет контекстом навигации, и переход к первой странице
                 rootFrame = new Frame();
 
                 rootFrame.NavigationFailed += OnNavigationFailed;
 
-                if (e.PreviousExecutionState == ApplicationExecutionState.Terminated)
-                {
-                    //TODO: Загрузить состояние из ранее приостановленного приложения
-                }
-
-                // Размещение фрейма в текущем окне
                 Window.Current.Content = rootFrame;
             }
 
@@ -59,12 +50,8 @@ namespace Cinema
             {
                 if (rootFrame.Content == null)
                 {
-                    // Если стек навигации не восстанавливается для перехода к первой странице,
-                    // настройка новой страницы путем передачи необходимой информации в качестве параметра
-                    // навигации
-                    rootFrame.Navigate(typeof(MainPage), e.Arguments);
+                    rootFrame.Navigate(typeof(NavigationPage), e.Arguments);
                 }
-                // Обеспечение активности текущего окна
                 Window.Current.Activate();
             }
         }
@@ -77,13 +64,11 @@ namespace Cinema
         private void OnSuspending(object sender, SuspendingEventArgs e)
         {
             var deferral = e.SuspendingOperation.GetDeferral();
-            //TODO: Сохранить состояние приложения и остановить все фоновые операции
             deferral.Complete();
         }
 
         private void ConfigureServices(IServiceCollection services)
         {
-            //TODO: Подумать над временем жизни сервисов!!!!
             services.AddSingleton<CommandAggregator>();
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
@@ -113,8 +98,15 @@ namespace Cinema
             await dbContext.Database.EnsureCreatedAsync();
             if (!dbContext.Users.Any())
             {
-                var fillService = ServiceProvider.GetRequiredService<DatabaseFillService>();
-                await fillService.FillStartDataToDatabaseAsync();
+                var fillDatabaseService = ServiceProvider.GetRequiredService<DatabaseFillService>();
+                try
+                {
+                    await fillDatabaseService.FillStartDataToDatabaseAsync();
+                }
+                catch (Exception)
+                {
+                    Debug.WriteLine("Проблемы с подключением к интернету, или с API");
+                }
             }
         }
     }

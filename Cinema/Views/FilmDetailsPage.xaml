@@ -17,7 +17,12 @@
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-
+        <Button
+            HorizontalAlignment="Left"
+            VerticalAlignment="Top"
+            Command="{Binding NavigateCommand}"
+            CommandParameter="filmsPage"
+            Content="Вернуться" />
         <StackPanel
             Grid.Row="0"
             Grid.Column="0"
@@ -27,13 +32,18 @@
                 Width="300"
                 Height="400"
                 Source="{Binding CurrentFilm.PosterUrl}" />
-            <TextBlock Text="{Binding CurrentFilm.Title}" />
+            <TextBlock
+                Width="auto"
+                FontSize="16"
+                FontWeight="Bold"
+                HorizontalTextAlignment="Center"
+                Text="{Binding CurrentFilm.Title}" />
             <TextBlock Text="{Binding CurrentFilm.Year}" />
             <TextBlock Text="{Binding CurrentFilm.Description}" TextWrapping="Wrap" />
             <Button
                 Command="{Binding DataContext.AddFilmToFavoritesCommand, ElementName=PageRoot}"
                 CommandParameter="{Binding CurrentFilm}"
-                Content="В избранное" />
+                Content="{Binding FavouriteButtonText}" />
         </StackPanel>
     </Grid>
 </Page>
