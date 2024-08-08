@@ -11,6 +11,7 @@ namespace Cinema.Models.Entities
         public string Description { get; set; }
         public short Year { get; set; }
         public string PosterUrl { get; set; }
+        public byte[] PosterImage { get; set; }
         public List<FilmGenre> FilmGenres { get; set; } = new List<FilmGenre>();
         public List<UserFilm> UserFilms { get; set; } = new List<UserFilm>();
     }

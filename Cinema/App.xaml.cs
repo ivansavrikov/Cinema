@@ -80,6 +80,7 @@ namespace Cinema
             services.AddSingleton<KinopoiskParserService>();
             services.AddSingleton<KinopoiskApiService>();
             services.AddSingleton<DatabaseRepository>();
+            services.AddSingleton<KinopoiskRepository>();
             services.AddSingleton<DatabaseFillService>();
         }
 
@@ -103,9 +104,10 @@ namespace Cinema
                 {
                     await fillDatabaseService.FillStartDataToDatabaseAsync();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     Debug.WriteLine("Проблемы с подключением к интернету, или с API");
+                    throw e;
                 }
             }
         }

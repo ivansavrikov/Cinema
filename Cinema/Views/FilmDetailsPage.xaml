@@ -31,7 +31,7 @@
             <Image
                 Width="300"
                 Height="400"
-                Source="{Binding CurrentFilm.PosterUrl}" />
+                Source="{Binding DataContext.Poster, ElementName=PageRoot}" />
             <TextBlock
                 Width="auto"
                 FontSize="16"

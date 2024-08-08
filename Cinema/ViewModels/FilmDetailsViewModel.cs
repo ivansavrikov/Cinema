@@ -5,12 +5,13 @@ using Cinema.Services.Repositories;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using System.Windows.Input;
+using Windows.UI.Xaml.Media.Imaging;
 
 namespace Cinema.ViewModels
 {
     public class FilmDetailsViewModel : BaseViewModel
     {
-        private readonly KinopoiskApiService _api;
+        private readonly KinopoiskRepository _kinopoiskRepository;
         private readonly CommandAggregator _commandAggregator;
         private readonly DatabaseRepository _repository;
 
@@ -25,6 +26,20 @@ namespace Cinema.ViewModels
                     return;
 
                 _currentFilm = value;
+                OnPropertyChanged();
+            }
+        }
+
+        private BitmapImage _poster;
+
+        public BitmapImage Poster
+        {
+            get => _poster;
+            set
+            {
+                if (value == _poster)
+                    return;
+                _poster = value;
                 OnPropertyChanged();
             }
         }
@@ -57,10 +72,10 @@ namespace Cinema.ViewModels
                 FavouriteButtonText = "В Избранное";
         }
 
-        public FilmDetailsViewModel(CommandAggregator commandAggregator, KinopoiskApiService api, DatabaseRepository repository)
+        public FilmDetailsViewModel(CommandAggregator commandAggregator, KinopoiskRepository kinopoiskRepository, DatabaseRepository repository)
         {
             _repository = repository;
-            _api = api;
+            _kinopoiskRepository = kinopoiskRepository;
             _commandAggregator = commandAggregator;
             _commandAggregator.RegisterCommand(nameof(SetCurrentFilmCommand), new RelayCommand(SetCurrentFilm));
             AddFilmToFavoritesCommand = new RelayCommand(AddFilmToFavourite);
@@ -76,13 +91,26 @@ namespace Cinema.ViewModels
         {
             try
             {
-                var detailedFilm = await _api.GetFilmInfoByIdAsync((film as FilmEntity).KinopoiskId);
-                CurrentFilm = await _repository.UpdateFilmAsync(detailedFilm);
-                ToggleFavoriteButton(film as FilmEntity);
+                if(film is FilmEntity filmEntity)
+                {
+                    //if(filmEntity.Description == null)
+                    //{
+                    //    var detailedFilm = await _kinopoiskRepository.GetFilmByIdAsync(filmEntity.KinopoiskId);
+                    //    CurrentFilm = await _repository.UpdateFilmAsync(detailedFilm);
+                    //}
+                    //else
+                    //{
+                    //    CurrentFilm = filmEntity;
+                    //}
+                    CurrentFilm = filmEntity;
+                    ToggleFavoriteButton(filmEntity);
+                    Poster = await BytesConverter.ToBitmapImage(CurrentFilm.PosterImage);
+                }
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 Debug.WriteLine("Проблемы с подключением к интернету, или с API");
+                throw e;
             }
         }
     }
