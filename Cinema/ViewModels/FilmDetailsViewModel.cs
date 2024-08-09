@@ -2,47 +2,30 @@
 using Cinema.Models.Entities;
 using Cinema.Services;
 using Cinema.Services.Repositories;
+using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
-using Windows.UI.Xaml.Media.Imaging;
 
 namespace Cinema.ViewModels
 {
     public class FilmDetailsViewModel : BaseViewModel
     {
+        private FilmViewModel _filmViewModel;
+        public FilmViewModel FilmViewModel
+        {
+            get => _filmViewModel;
+            set
+            {
+                _filmViewModel = value;
+                OnPropertyChanged();
+            }
+        }
+
         private readonly KinopoiskRepository _kinopoiskRepository;
         private readonly CommandAggregator _commandAggregator;
         private readonly DatabaseRepository _repository;
-
-        private FilmEntity _currentFilm;
-        public FilmEntity CurrentFilm
-        {
-            get => _currentFilm;
-
-            set
-            {
-                if (value == _currentFilm)
-                    return;
-
-                _currentFilm = value;
-                OnPropertyChanged();
-            }
-        }
-
-        private BitmapImage _poster;
-
-        public BitmapImage Poster
-        {
-            get => _poster;
-            set
-            {
-                if (value == _poster)
-                    return;
-                _poster = value;
-                OnPropertyChanged();
-            }
-        }
 
         private string _favouriteButtonText = "В Избранное";
         public string FavouriteButtonText
@@ -63,9 +46,7 @@ namespace Cinema.ViewModels
         public void ToggleFavoriteButton(FilmEntity film)
         {
             var isAdded = Task.Run(async () => 
-                await _repository.IsFilmAddedByUser(film))
-                .GetAwaiter()
-                .GetResult();
+                await _repository.IsFilmAddedByUser(film)).GetAwaiter().GetResult();
             if (isAdded)
                 FavouriteButtonText = "Убрать из Избранного";
             else
@@ -102,9 +83,15 @@ namespace Cinema.ViewModels
                     //{
                     //    CurrentFilm = filmEntity;
                     //}
-                    CurrentFilm = filmEntity;
+
                     ToggleFavoriteButton(filmEntity);
-                    Poster = await BytesConverter.ToBitmapImage(CurrentFilm.PosterImage);
+                    FilmViewModel = new(filmEntity);
+                    var genres = await _repository.GetFilmGenresAsync(filmEntity);
+                    
+                    StringBuilder sb = new();
+                    foreach (var g in genres)
+                        sb.Append($"{g.Title}, ");
+                    FilmViewModel.Genres = sb.ToString().TrimEnd(',', ' ');
                 }
             }
             catch (System.Exception e)

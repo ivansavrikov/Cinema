@@ -39,7 +39,7 @@ namespace Cinema.ViewModels
 					break;
 
 				case "favoritesPage":
-                    CurrentPageType = typeof(FavoritesPage);
+                    CurrentPageType = typeof(UserFilmsPage);
                     break;
 
 				case "filtersPage":
@@ -47,7 +47,7 @@ namespace Cinema.ViewModels
                     break;
 
                 case "filmInfoPage":
-                    CurrentPageType = typeof(FilmInfoPage);
+                    CurrentPageType = typeof(FilmDetailsPage);
                     break;
 				default:
 					break;

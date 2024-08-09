@@ -9,6 +9,8 @@ namespace Cinema.ViewModels
     {
         public FilmEntity Film { get; set; }
         public string Title { get; set; }
+        public string TitleYear { get; set; }
+        public string Genres { get; set; }
 
         private string _year;
         public string Year
@@ -32,11 +34,15 @@ namespace Cinema.ViewModels
             }
         }
 
+        public string Description { get; set; }
+
         public FilmViewModel(FilmEntity film)
         {
             Film = film;
             Title = Film.Title;
             Year = Film.Year.ToString();
+            TitleYear = $"{Title} ({Year})";
+            Description = Film.Description ?? "Нет описания";
             _ = InitializeAsync();
         }
         public async Task InitializeAsync()

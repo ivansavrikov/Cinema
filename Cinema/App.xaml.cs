@@ -72,7 +72,7 @@ namespace Cinema
             services.AddSingleton<CommandAggregator>();
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
-            services.AddSingleton<FavoritesFilmsViewModel>();
+            services.AddSingleton<FavoritesViewModel>();
             services.AddSingleton<FilmDetailsViewModel>();
 
             services.AddDbContext<DatabaseContext>();
@@ -89,7 +89,7 @@ namespace Cinema
             ServiceProvider.GetRequiredService<CommandAggregator>();
             ServiceProvider.GetRequiredService<NavigationViewModel>();
             ServiceProvider.GetRequiredService<FilmsViewModel>();
-            ServiceProvider.GetRequiredService<FavoritesFilmsViewModel>();
+            ServiceProvider.GetRequiredService<FavoritesViewModel>();
             ServiceProvider.GetRequiredService<FilmDetailsViewModel>();
         }
 

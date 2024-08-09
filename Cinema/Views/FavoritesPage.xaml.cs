@@ -4,12 +4,12 @@ using Windows.UI.Xaml.Controls;
 
 namespace Cinema.Views
 {
-    public sealed partial class FavoritesPage : Page
+    public sealed partial class UserFilmsPage : Page
     {
-        public FavoritesPage()
+        public UserFilmsPage()
         {
             this.InitializeComponent();
-            this.DataContext = App.ServiceProvider.GetRequiredService<FavoritesFilmsViewModel>();
+            this.DataContext = App.ServiceProvider.GetRequiredService<FavoritesViewModel>();
         }
     }
 }

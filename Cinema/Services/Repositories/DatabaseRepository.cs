@@ -129,5 +129,18 @@ namespace Cinema.Services.Repositories
             await _dbContext.SaveChangesAsync();
             return film;
         }
+
+        public async Task<List<GenreEntity>> GetFilmGenresAsync(FilmEntity film)
+        {
+            var filmGenres = await _dbContext.FilmGenres
+                .Where(fg => fg.FilmId == film.Id)
+                .Include(fg => fg.Genre)
+                .ToListAsync();
+
+            List<GenreEntity> genres = [];
+            foreach (var fg in filmGenres)
+                genres.Add(fg.Genre);
+            return genres;
+        }
     }
 }
