@@ -134,13 +134,16 @@
     <Compile Include="Models\Database\Entities\UserFilm.cs" />
     <Compile Include="Services\CommandAggregator.cs" />
     <Compile Include="Services\DatabaseFillService.cs" />
+    <Compile Include="Helpers\BytesConverter.cs" />
     <Compile Include="Services\KinopoiskApiService.cs" />
     <Compile Include="Services\KinopoiskParserService.cs" />
     <Compile Include="Services\Repositories\DatabaseRepository.cs" />
+    <Compile Include="Services\Repositories\KinopoiskRepository.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\FavoritesFilmsViewModel.cs" />
+    <Compile Include="ViewModels\FavoritesViewModel.cs" />
     <Compile Include="ViewModels\FilmDetailsViewModel.cs" />
     <Compile Include="ViewModels\FilmsViewModel.cs" />
+    <Compile Include="ViewModels\FilmViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="Views\FavoritesPage.xaml.cs">
       <DependentUpon>FavoritesPage.xaml</DependentUpon>

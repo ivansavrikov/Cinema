@@ -4,9 +4,9 @@ using Windows.UI.Xaml.Controls;
 
 namespace Cinema.Views
 {
-    public sealed partial class FilmInfoPage : Page
+    public sealed partial class FilmDetailsPage : Page
     {
-        public FilmInfoPage()
+        public FilmDetailsPage()
         {
             this.InitializeComponent();
             this.DataContext = App.ServiceProvider.GetRequiredService<FilmDetailsViewModel>();

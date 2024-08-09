@@ -2,7 +2,9 @@
 using Cinema.Models.Entities;
 using Cinema.Services;
 using Cinema.Services.Repositories;
+using System.Data.SqlTypes;
 using System.Diagnostics;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Input;
 
@@ -10,24 +12,20 @@ namespace Cinema.ViewModels
 {
     public class FilmDetailsViewModel : BaseViewModel
     {
-        private readonly KinopoiskApiService _api;
-        private readonly CommandAggregator _commandAggregator;
-        private readonly DatabaseRepository _repository;
-
-        private FilmEntity _currentFilm;
-        public FilmEntity CurrentFilm
+        private FilmViewModel _filmViewModel;
+        public FilmViewModel FilmViewModel
         {
-            get => _currentFilm;
-
+            get => _filmViewModel;
             set
             {
-                if (value == _currentFilm)
-                    return;
-
-                _currentFilm = value;
+                _filmViewModel = value;
                 OnPropertyChanged();
             }
         }
+
+        private readonly KinopoiskRepository _kinopoiskRepository;
+        private readonly CommandAggregator _commandAggregator;
+        private readonly DatabaseRepository _repository;
 
         private string _favouriteButtonText = "В Избранное";
         public string FavouriteButtonText
@@ -48,19 +46,17 @@ namespace Cinema.ViewModels
         public void ToggleFavoriteButton(FilmEntity film)
         {
             var isAdded = Task.Run(async () => 
-                await _repository.IsFilmAddedByUser(film))
-                .GetAwaiter()
-                .GetResult();
+                await _repository.IsFilmAddedByUser(film)).GetAwaiter().GetResult();
             if (isAdded)
                 FavouriteButtonText = "Убрать из Избранного";
             else
                 FavouriteButtonText = "В Избранное";
         }
 
-        public FilmDetailsViewModel(CommandAggregator commandAggregator, KinopoiskApiService api, DatabaseRepository repository)
+        public FilmDetailsViewModel(CommandAggregator commandAggregator, KinopoiskRepository kinopoiskRepository, DatabaseRepository repository)
         {
             _repository = repository;
-            _api = api;
+            _kinopoiskRepository = kinopoiskRepository;
             _commandAggregator = commandAggregator;
             _commandAggregator.RegisterCommand(nameof(SetCurrentFilmCommand), new RelayCommand(SetCurrentFilm));
             AddFilmToFavoritesCommand = new RelayCommand(AddFilmToFavourite);
@@ -76,13 +72,32 @@ namespace Cinema.ViewModels
         {
             try
             {
-                var detailedFilm = await _api.GetFilmInfoByIdAsync((film as FilmEntity).KinopoiskId);
-                CurrentFilm = await _repository.UpdateFilmAsync(detailedFilm);
-                ToggleFavoriteButton(film as FilmEntity);
+                if(film is FilmEntity filmEntity)
+                {
+                    //if(filmEntity.Description == null)
+                    //{
+                    //    var detailedFilm = await _kinopoiskRepository.GetFilmByIdAsync(filmEntity.KinopoiskId);
+                    //    CurrentFilm = await _repository.UpdateFilmAsync(detailedFilm);
+                    //}
+                    //else
+                    //{
+                    //    CurrentFilm = filmEntity;
+                    //}
+
+                    ToggleFavoriteButton(filmEntity);
+                    FilmViewModel = new(filmEntity);
+                    var genres = await _repository.GetFilmGenresAsync(filmEntity);
+                    
+                    StringBuilder sb = new();
+                    foreach (var g in genres)
+                        sb.Append($"{g.Title}, ");
+                    FilmViewModel.Genres = sb.ToString().TrimEnd(',', ' ');
+                }
             }
-            catch (System.Exception)
+            catch (System.Exception e)
             {
                 Debug.WriteLine("Проблемы с подключением к интернету, или с API");
+                throw e;
             }
         }
     }

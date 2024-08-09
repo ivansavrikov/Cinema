@@ -12,27 +12,29 @@
     mc:Ignorable="d">
 
     <Grid>
-        <GridView ItemsSource="{Binding Films}">
+        <GridView ItemsSource="{Binding FilmsViewModels}">
             <GridView.ItemTemplate>
                 <DataTemplate x:Name="filmTemplate">
                     <StackPanel HorizontalAlignment="Left" VerticalAlignment="Top">
+
                         <Image
                             Width="300"
                             Height="400"
-                            Source="{Binding PosterUrl}" />
+                            Source="{Binding Poster}" />
+
                         <TextBlock
                             Width="auto"
                             FontSize="16"
                             FontWeight="Bold"
                             HorizontalTextAlignment="Center"
-                            Text="{Binding Title}" />
-                        <TextBlock HorizontalTextAlignment="Center" Text="{Binding Year}" />
+                            Text="{Binding TitleYear}" />
 
                         <behaviors:Interaction.Behaviors>
                             <core:EventTriggerBehavior EventName="Tapped">
-                                <core:InvokeCommandAction Command="{Binding DataContext.GetFilmInfoCommand, ElementName=PageRoot}" CommandParameter="{Binding}" />
+                                <core:InvokeCommandAction Command="{Binding DataContext.GetFilmInfoCommand, ElementName=PageRoot}" CommandParameter="{Binding Film}" />
                             </core:EventTriggerBehavior>
                         </behaviors:Interaction.Behaviors>
+
                     </StackPanel>
                 </DataTemplate>
             </GridView.ItemTemplate>

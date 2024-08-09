@@ -72,7 +72,7 @@ namespace Cinema
             services.AddSingleton<CommandAggregator>();
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
-            services.AddSingleton<FavoritesFilmsViewModel>();
+            services.AddSingleton<FavoritesViewModel>();
             services.AddSingleton<FilmDetailsViewModel>();
 
             services.AddDbContext<DatabaseContext>();
@@ -80,6 +80,7 @@ namespace Cinema
             services.AddSingleton<KinopoiskParserService>();
             services.AddSingleton<KinopoiskApiService>();
             services.AddSingleton<DatabaseRepository>();
+            services.AddSingleton<KinopoiskRepository>();
             services.AddSingleton<DatabaseFillService>();
         }
 
@@ -88,7 +89,7 @@ namespace Cinema
             ServiceProvider.GetRequiredService<CommandAggregator>();
             ServiceProvider.GetRequiredService<NavigationViewModel>();
             ServiceProvider.GetRequiredService<FilmsViewModel>();
-            ServiceProvider.GetRequiredService<FavoritesFilmsViewModel>();
+            ServiceProvider.GetRequiredService<FavoritesViewModel>();
             ServiceProvider.GetRequiredService<FilmDetailsViewModel>();
         }
 
@@ -103,9 +104,10 @@ namespace Cinema
                 {
                     await fillDatabaseService.FillStartDataToDatabaseAsync();
                 }
-                catch (Exception)
+                catch (Exception e)
                 {
                     Debug.WriteLine("Проблемы с подключением к интернету, или с API");
+                    throw e;
                 }
             }
         }

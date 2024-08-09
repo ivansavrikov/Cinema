@@ -1,20 +1,12 @@
 ﻿using Cinema.Models.Database.Entities;
 using Cinema.Services.Repositories;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
 namespace Cinema.Services
 {
-    public class DatabaseFillService
+    public class DatabaseFillService(KinopoiskRepository kinopoiskRepository, DatabaseRepository databaseRepository)
     {
-        private readonly KinopoiskApiService _api;
-        private readonly DatabaseRepository _repository;
-
-        public DatabaseFillService(KinopoiskApiService api, DatabaseRepository repository)
-        {
-            _api = api;
-            _repository = repository;
-        }
-
         public async Task FillStartDataToDatabaseAsync()
         {
             await AddLocalUserAsync();
@@ -30,26 +22,25 @@ namespace Cinema.Services
                 UserName = "local"
             };
 
-            await _repository.AddUserAsync(user);
+            await databaseRepository.AddUserAsync(user);
         }
 
         public async Task FillGenresAsync()
         {
-            var genres = await _api.GetAllGenresAsync();
+            var genres = await kinopoiskRepository.GetAllGenresAsync();
             foreach (var genre in genres)
-                await _repository.AddGenreAsync(genre);
+                await databaseRepository.AddGenreAsync(genre);
         }
 
         public async Task FillFilmsAsync()
         {
-            for (int i = 1; i <= 5; i++)
+            var films = await kinopoiskRepository.GetAllFilmsAsync();
+            foreach (var film in films)
             {
-                var films = await _api.GetFilmsOnPageAsync(i);
-                foreach (var film in films)
-                {
-                    await _repository.AddFilmAsync(film);
-                }
+                await databaseRepository.AddFilmAsync(film);
             }
+            //var film = await kinopoiskRepository.GetFilmByIdAsync(301);
+            //await databaseRepository.AddFilmAsync(film);
         }
     }
 }
