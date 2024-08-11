@@ -52,5 +52,22 @@ namespace Cinema.Services.Repositories
             List<GenreEntity> genres = parser.ParseGenres(json);
             return genres;
         }
+
+        public async Task<List<FilmEntity>> GetFilmsByGenreAsync(int kinopopoiskId)
+        {
+            List<FilmEntity> films = [];
+            var jsonString = await api.GetFilmsByGenreAsync(kinopopoiskId);
+            using (var json = JsonDocument.Parse(jsonString))
+            {
+                var root = json.RootElement;
+                var jsonFilmsArray = root.GetProperty("items").EnumerateArray();
+                foreach (JsonElement jsonFilm in jsonFilmsArray)
+                {
+                    FilmEntity film = parser.ParseFilm(jsonFilm.GetRawText());
+                    films.Add(film);
+                }
+            }
+            return films;
+        }
     }
 }

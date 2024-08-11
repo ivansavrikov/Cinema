@@ -74,6 +74,8 @@ namespace Cinema
             services.AddSingleton<FilmsViewModel>();
             services.AddSingleton<FavoritesViewModel>();
             services.AddSingleton<FilmDetailsViewModel>();
+            services.AddSingleton<FiltersViewModel>();
+
 
             services.AddDbContext<DatabaseContext>();
 
@@ -91,6 +93,7 @@ namespace Cinema
             ServiceProvider.GetRequiredService<FilmsViewModel>();
             ServiceProvider.GetRequiredService<FavoritesViewModel>();
             ServiceProvider.GetRequiredService<FilmDetailsViewModel>();
+            ServiceProvider.GetRequiredService<FiltersViewModel>();
         }
 
         private async Task InitializeDatabase()

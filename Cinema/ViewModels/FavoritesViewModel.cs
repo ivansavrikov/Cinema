@@ -38,7 +38,7 @@ namespace Cinema.ViewModels
 
         public async Task LoadUserFilms()
         {
-            FavoritesFilms = [];
+            FavoritesFilms.Clear();
             var userFilms = await _repository.GetUserFilmsAsync();
             foreach (var film in userFilms)
                 FavoritesFilms.Add(film);

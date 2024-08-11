@@ -142,5 +142,11 @@ namespace Cinema.Services.Repositories
                 genres.Add(fg.Genre);
             return genres;
         }
+
+        public async Task<List<GenreEntity>> GetAllGenresAsync()
+        {
+            var genres = await _dbContext.Genres.ToListAsync();
+            return genres;
+        }
     }
 }

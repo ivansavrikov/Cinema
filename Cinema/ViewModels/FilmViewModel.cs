@@ -47,6 +47,13 @@ namespace Cinema.ViewModels
         }
         public async Task InitializeAsync()
         {
+            if (Film.PosterImage == null)
+            {
+                Poster = new BitmapImage();
+                Poster.UriSource = new System.Uri(Film.PosterUrl);
+                return;
+            }
+
             Poster = await BytesConverter.ToBitmapImage(Film.PosterImage);
         }
     }

@@ -2,6 +2,7 @@
 using System;
 using RestSharp;
 using System.Text.Json;
+using Windows.UI.Xaml.Controls;
 
 namespace Cinema.Services
 {
@@ -50,9 +51,19 @@ namespace Cinema.Services
             return json;
         }
 
+        public async Task<string> GetFilmsByGenreAsync(int kinopoiskId)
+        {
+            var request = new RestRequest($"api/v2.2/films?genres={kinopoiskId}", Method.Get);
+            var response = await _restClient.ExecuteAsync(request);
+            if (!response.IsSuccessful)
+                throw new Exception("Error retrieving film: " + response.ErrorMessage);
+            string json = response.Content;
+            return json;
+        }
+
         public async Task<byte[]> GetImageAsBytesAsync(string imageUrl)
         {
-            var request = new RestRequest(imageUrl , Method.Get);
+            var request = new RestRequest(imageUrl, Method.Get);
             var response = await _restClient.ExecuteAsync(request);
             if (!response.IsSuccessful)
                 throw new Exception("Error retrieving film: " + response.ErrorMessage);
