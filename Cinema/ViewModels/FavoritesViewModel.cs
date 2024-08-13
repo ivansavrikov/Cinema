@@ -12,7 +12,8 @@ namespace Cinema.ViewModels
     {
         private readonly DatabaseRepository _repository;
         private readonly CommandAggregator _commandAggregator;
-        public ObservableCollection<FilmEntity> FavoritesFilms { get; set; } = [];
+        public ObservableCollection<FilmViewModel> FilmsViewModels { get; set; } = [];
+        //public ObservableCollection<FilmEntity> FavoritesFilms { get; set; } = [];
         public ICommand AddFilmToFavoritesCommand => _commandAggregator.GetCommand(nameof(AddFilmToFavoritesCommand));
         public ICommand GetFilmInfoCommand => _commandAggregator.GetCommand(nameof(GetFilmInfoCommand));
         public FavoritesViewModel(CommandAggregator commandAggregator, DatabaseRepository repository)
@@ -29,7 +30,7 @@ namespace Cinema.ViewModels
             {
                 if (await _repository.IsFilmAddedByUser(filmEntity))
                     await _repository.DeleteFilmFromUserAsync(filmEntity);
-                else if (await _repository.IsFilmAddedAsync(filmEntity))
+                else if (await _repository.IsFilmAddedAsync(filmEntity.KinopoiskId))
                     await _repository.AddFilmToUserAsync(filmEntity);
 
                 await LoadUserFilms();
@@ -38,10 +39,15 @@ namespace Cinema.ViewModels
 
         public async Task LoadUserFilms()
         {
-            FavoritesFilms.Clear();
+            //FavoritesFilms.Clear();
+            //var userFilms = await _repository.GetUserFilmsAsync();
+            //foreach (var film in userFilms)
+            //    FavoritesFilms.Add(film);
+
+            FilmsViewModels.Clear();
             var userFilms = await _repository.GetUserFilmsAsync();
             foreach (var film in userFilms)
-                FavoritesFilms.Add(film);
+                FilmsViewModels.Add(new FilmViewModel(film));
         }
     }
 }

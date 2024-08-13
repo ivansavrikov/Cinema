@@ -15,6 +15,10 @@ namespace Cinema.Models.EntityConfigurations
                 .HasIndex(i => i.KinopoiskId)
                 .IsUnique();
 
+            builder
+                .Property(f => f.IsFullySynchronized)
+                .IsRequired().HasDefaultValue(false);
+
             builder.HasMany(f => f.FilmGenres)
                 .WithOne(fg => fg.Film)
                 .HasForeignKey(fg => fg.FilmId);

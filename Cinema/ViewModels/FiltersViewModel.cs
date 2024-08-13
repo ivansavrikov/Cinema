@@ -2,6 +2,7 @@
 using Cinema.Models.Entities;
 using Cinema.Services;
 using Cinema.Services.Repositories;
+using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -48,14 +49,38 @@ namespace Cinema.ViewModels
             }
         }
 
+        private string _statusText;
+        public string StatusText
+        {
+            get => _statusText;
+            set
+            {
+                _statusText = value;
+                OnPropertyChanged();
+            }
+        }
+
         public async void ApplyFilters(object p)
         {
+            StatusText = "Загрузка...";
             ApplingIsActive = false;
             FilmsViewModels.Clear();
-            var films = await _kinopoiskRepository.GetFilmsByGenreAsync(SelectedGenre.KinopoiskId);
-            foreach (var film in films)
-                FilmsViewModels.Add(new FilmViewModel(film));
+            try
+            {
+                var films = await _kinopoiskRepository.GetFilmsByGenreAsync(SelectedGenre.KinopoiskId);
+                foreach (var film in films)
+                    FilmsViewModels.Add(new FilmViewModel(film));
+            }
+            catch (Exception)
+            {
+                StatusText = "Проверьте подключение к интернету";
+                ApplingIsActive = true;
+                return;
+            }
             ApplingIsActive = true;
+            StatusText = string.Empty;
+            if (FilmsViewModels.Count == 0)
+                StatusText = "Нет фильмов с данным жанром :(";
         }
     }
 }

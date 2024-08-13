@@ -23,7 +23,6 @@
             HorizontalAlignment="Left"
             VerticalAlignment="Top"
             Command="{Binding DataContext.NavigateCommand, ElementName=PageRoot}"
-            CommandParameter="filmsPage"
             Content="Вернуться" />
 
         <StackPanel
@@ -46,7 +45,17 @@
 
             <TextBlock Text="{Binding DataContext.FilmViewModel.Year, ElementName=PageRoot}" />
 
+            <TextBlock>
+                <Hyperlink
+                    Foreground="White"
+                    NavigateUri="{Binding DataContext.FilmViewModel.KinopoiskUri, ElementName=PageRoot}"
+                    TextDecorations="None">
+                    открыть на Кинопоиске
+                </Hyperlink>
+            </TextBlock>
+
             <TextBlock
+                FontWeight="Bold"
                 Foreground="OrangeRed"
                 Text="{Binding DataContext.FilmViewModel.Genres, ElementName=PageRoot}"
                 TextWrapping="WrapWholeWords" />
@@ -56,7 +65,8 @@
             <Button
                 Command="{Binding DataContext.AddFilmToFavoritesCommand, ElementName=PageRoot}"
                 CommandParameter="{Binding DataContext.FilmViewModel.Film, ElementName=PageRoot}"
-                Content="{Binding DataContext.FavouriteButtonText, ElementName=PageRoot}" />
+                Content="{Binding DataContext.FavouriteButtonText, ElementName=PageRoot}"
+                IsEnabled="{Binding DataContext.FavoriteButtonIsEnabled, ElementName=PageRoot}" />
 
         </StackPanel>
 

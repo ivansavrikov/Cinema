@@ -9,6 +9,7 @@ namespace Cinema.ViewModels
     public class NavigationViewModel : BaseViewModel
     {
         private CommandAggregator _commandAggregator;
+        private NavigationManager _navigationManager;
         private Type _currentPageType;
         public Type CurrentPageType
 		{
@@ -22,36 +23,34 @@ namespace Cinema.ViewModels
             }
 		}
         public ICommand NavigateCommand => _commandAggregator.GetCommand(nameof(NavigateCommand));
-        public NavigationViewModel(CommandAggregator commandAggregator)
+        public NavigationViewModel(CommandAggregator commandAggregator, NavigationManager navigationManager)
         {
+            _navigationManager = navigationManager;
             _commandAggregator = commandAggregator;
             _commandAggregator.RegisterCommand(nameof(NavigateCommand), new RelayCommand(Navigate));
 
             CurrentPageType = typeof(FilmsPage);
         }
 
-        private void Navigate(object pageTag)
+        private void Navigate(object PagesTagsEnumItem)
         {
-			switch (pageTag.ToString())
-			{
-				case "filmsPage":
-					CurrentPageType = typeof(FilmsPage);
-					break;
+            PagesTagsEnum tag;
+            if (byte.TryParse(PagesTagsEnumItem.ToString(), out byte tagByte))
+                tag = (PagesTagsEnum)tagByte;
+            else
+                tag = (PagesTagsEnum)PagesTagsEnumItem;
 
-				case "favoritesPage":
-                    CurrentPageType = typeof(UserFilmsPage);
-                    break;
+            CurrentPageType = tag switch
+            {
+                PagesTagsEnum.LocalsFilmsPage => typeof(FilmsPage),
+                PagesTagsEnum.FavoritsFilmsPage => typeof(UserFilmsPage),
+                PagesTagsEnum.FiltersPage => typeof(FiltersPage),
+                PagesTagsEnum.FilmDetailsPage => typeof(FilmDetailsPage),
+                _ => throw new ArgumentException("uncorrect tag of page to navigate"),
+            };
 
-				case "filtersPage":
-                    CurrentPageType = typeof(FiltersPage);
-                    break;
-
-                case "filmInfoPage":
-                    CurrentPageType = typeof(FilmDetailsPage);
-                    break;
-				default:
-					break;
-			}
-		}
+            _navigationManager.PreviousPage = _navigationManager.CurrentPage;
+            _navigationManager.CurrentPage = tag;
+        }
     }
 }

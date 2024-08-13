@@ -26,13 +26,6 @@
             Grid.Column="0"
             Orientation="Horizontal">
 
-            <TextBlock
-                Height="Auto"
-                FontSize="22"
-                HorizontalTextAlignment="Center"
-                Text="Жанр:"
-                TextAlignment="Center" />
-
             <ComboBox
                 Width="200"
                 Height="50"
@@ -47,6 +40,15 @@
                 IsEnabled="{Binding DataContext.ApplingIsActive, ElementName=PageRoot}" />
 
         </StackPanel>
+
+        <TextBlock
+            Grid.Row="1"
+            Grid.Column="0"
+            Width="Auto"
+            Height="Auto"
+            HorizontalAlignment="Center"
+            VerticalAlignment="Center"
+            Text="{Binding DataContext.StatusText, ElementName=PageRoot}" />
 
         <GridView
             Grid.Row="1"
