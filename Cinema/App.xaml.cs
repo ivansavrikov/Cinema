@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Cinema.Helpers;
 using Cinema.Models.Database;
 using Cinema.Services;
 using Cinema.Services.Repositories;
@@ -9,6 +10,7 @@ using Cinema.ViewModels;
 using Microsoft.Extensions.DependencyInjection;
 using Windows.ApplicationModel;
 using Windows.ApplicationModel.Activation;
+using Windows.UI.Popups;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Navigation;
@@ -69,19 +71,22 @@ namespace Cinema
 
         private void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<CommandAggregator>();
             services.AddSingleton<NavigationViewModel>();
             services.AddSingleton<FilmsViewModel>();
             services.AddSingleton<FavoritesViewModel>();
             services.AddSingleton<FilmDetailsViewModel>();
-
+            services.AddSingleton<FiltersViewModel>();
+            
             services.AddDbContext<DatabaseContext>();
 
+            services.AddSingleton<NavigationManager>();
+            services.AddSingleton<CommandAggregator>();
             services.AddSingleton<KinopoiskParserService>();
             services.AddSingleton<KinopoiskApiService>();
             services.AddSingleton<DatabaseRepository>();
             services.AddSingleton<KinopoiskRepository>();
             services.AddSingleton<DatabaseFillService>();
+            services.AddSingleton<FilmMigratorService>();
         }
 
         private void InitializeServises()
@@ -91,6 +96,7 @@ namespace Cinema
             ServiceProvider.GetRequiredService<FilmsViewModel>();
             ServiceProvider.GetRequiredService<FavoritesViewModel>();
             ServiceProvider.GetRequiredService<FilmDetailsViewModel>();
+            ServiceProvider.GetRequiredService<FiltersViewModel>();
         }
 
         private async Task InitializeDatabase()
@@ -104,10 +110,11 @@ namespace Cinema
                 {
                     await fillDatabaseService.FillStartDataToDatabaseAsync();
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
-                    Debug.WriteLine("Проблемы с подключением к интернету, или с API");
-                    throw e;
+                    await dbContext.Database.EnsureDeletedAsync();
+                    Debug.WriteLine("Для первого запуска приложения необходим интернет и доступ к API");
+                    throw new Exception("Для первого запуска приложения необходим интернет и доступ к API");
                 }
             }
         }

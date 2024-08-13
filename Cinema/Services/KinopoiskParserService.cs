@@ -18,7 +18,13 @@ namespace Cinema.Services
                     title = root.GetProperty("nameOriginal").GetString();
                 film.Title = title;
                 if (root.TryGetProperty("description", out JsonElement description))
-                    film.Description = description.GetString();
+                {
+                    var filmDescription = description.GetString();
+                    if (filmDescription == null)
+                        filmDescription = root.GetProperty("shortDescription").GetString();
+                    film.Description = filmDescription;
+                }
+                    
                 film.PosterUrl = root.GetProperty("posterUrl").GetString();
                 film.Year = root.GetProperty("year").GetInt16();
             }

@@ -1,4 +1,5 @@
 ﻿using Cinema.Models.Database.Entities;
+using System;
 using System.Collections.Generic;
 
 namespace Cinema.Models.Entities
@@ -12,6 +13,8 @@ namespace Cinema.Models.Entities
         public short Year { get; set; }
         public string PosterUrl { get; set; }
         public byte[] PosterImage { get; set; }
+        public bool IsFullySynchronized {  get; set; }
+        public DateTime LastSync {  get; set; }
         public List<FilmGenre> FilmGenres { get; set; } = new List<FilmGenre>();
         public List<UserFilm> UserFilms { get; set; } = new List<UserFilm>();
     }

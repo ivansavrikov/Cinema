@@ -1,4 +1,5 @@
 ﻿using Cinema.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -14,7 +15,7 @@ namespace Cinema.Services.Repositories
             List<GenreEntity> genres = parser.ParseGenres(json);
             foreach (var g in genres)
             {
-                var genre = await repository.GetGenreByNameAsync(g.Title) ?? g;
+                var genre = await repository.GetGenreByNameAsync(g.Title) ?? throw new Exception($"Жанр '{g.Title}' не добавлен в локальное хранилище");
                 film.FilmGenres.Add(new FilmGenre { Film = film, Genre = genre });
             }
             return film;
@@ -26,10 +27,10 @@ namespace Cinema.Services.Repositories
             return await BuildFilm(jsonFilm);
         }
 
-        public async Task<List<FilmEntity>> GetAllFilmsAsync()
+        public async Task<List<FilmEntity>> GetFilmsAsync()
         {
             List<FilmEntity> films = [];
-            for (int i = 1; i <= 2; i++)
+            for (int i = 1; i <= 5; i++)
             {
                 var jsonString = await api.GetFilmsOnPageAsync(i);
                 using (var json = JsonDocument.Parse(jsonString))
@@ -51,6 +52,23 @@ namespace Cinema.Services.Repositories
             var json = await api.GetAllGenresAsync();
             List<GenreEntity> genres = parser.ParseGenres(json);
             return genres;
+        }
+
+        public async Task<List<FilmEntity>> GetFilmsByGenreAsync(int kinopopoiskId)
+        {
+            List<FilmEntity> films = [];
+            var jsonString = await api.GetFilmsByGenreAsync(kinopopoiskId);
+            using (var json = JsonDocument.Parse(jsonString))
+            {
+                var root = json.RootElement;
+                var jsonFilmsArray = root.GetProperty("items").EnumerateArray();
+                foreach (JsonElement jsonFilm in jsonFilmsArray)
+                {
+                    FilmEntity film = parser.ParseFilm(jsonFilm.GetRawText());
+                    films.Add(film);
+                }
+            }
+            return films;
         }
     }
 }

@@ -25,12 +25,14 @@ namespace Cinema.ViewModels
             _repository = repository;
             _commandAggregator = commandAggregator;
             _commandAggregator.RegisterCommand(nameof(GetFilmInfoCommand), new RelayCommand(GetFilmInfo));
+            _commandAggregator.RegisterCommand("LoadFilmsCommand", new RelayCommand(async (object param) => await LoadFilmsAsync()));
 
             _ = LoadFilmsAsync();
         }
 
         public async Task LoadFilmsAsync()
         {
+            FilmsViewModels.Clear();
             var films = await _repository.GetAllFilmsAsync();
             foreach (var f in films)
                 FilmsViewModels.Add(new FilmViewModel(f));
@@ -39,12 +41,10 @@ namespace Cinema.ViewModels
         public void GetFilmInfo(object film)
         {
             if (film == null)
-            {
                 throw new Exception("film is null");
-            }
 
-            _commandAggregator.GetCommand("NavigateCommand").Execute("filmInfoPage");
             _commandAggregator.GetCommand("SetCurrentFilmCommand").Execute(film);
+            _commandAggregator.GetCommand("NavigateCommand").Execute(PagesTagsEnum.FilmDetailsPage);
         }
     }
 }

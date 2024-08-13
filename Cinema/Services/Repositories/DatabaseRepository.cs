@@ -20,11 +20,12 @@ namespace Cinema.Services.Repositories
 
         public async Task AddFilmAsync(FilmEntity film)
         {
-            var filmIsAdded = await IsFilmAddedAsync(film);
+            var filmIsAdded = await IsFilmAddedAsync(film.KinopoiskId);
 
             if (filmIsAdded)
             {
-                Debug.WriteLine($"Добавление фильма с KinopoiskID = {film.KinopoiskId} запрещено, так как он уже содержится в базе данных");
+                Debug.WriteLine($"Фильм с KinopoiskID = {film.KinopoiskId} уже содержится в базе данных, будет выполнено обновление");
+                await UpdateFilmAsync(film);
                 return;
             }    
 
@@ -32,10 +33,10 @@ namespace Cinema.Services.Repositories
             await _dbContext.SaveChangesAsync();
         }
 
-        public async Task<bool> IsFilmAddedAsync(FilmEntity film)
+        public async Task<bool> IsFilmAddedAsync(int kinopoiskId)
         {
             return await _dbContext.Films
-                .Where(f => f.KinopoiskId == film.KinopoiskId)
+                .Where(f => f.KinopoiskId == kinopoiskId)
                 .AnyAsync();
         }
 
@@ -43,6 +44,14 @@ namespace Cinema.Services.Repositories
         {
             var film = await _dbContext.Films
                 .Where(f => f.Id == id)
+                .FirstOrDefaultAsync();
+            return film;
+        }
+
+        public async Task<FilmEntity> GetFilmByKinopoiskIdAsync(int kinopoiskId)
+        {
+            var film = await _dbContext.Films
+                .Where(f => f.KinopoiskId == kinopoiskId)
                 .FirstOrDefaultAsync();
             return film;
         }
@@ -107,6 +116,8 @@ namespace Cinema.Services.Repositories
 
         public async Task<bool> IsFilmAddedByUser(FilmEntity film, int userId = 1)
         {
+            if (await IsFilmAddedAsync(film.KinopoiskId) == false)
+                return false;
             return await _dbContext.UserFilms
                 .Where(uf => uf.UserId == userId && uf.FilmId == film.Id)
                 .AnyAsync();
@@ -116,15 +127,14 @@ namespace Cinema.Services.Repositories
         {
             var film = await _dbContext.Films
                 .Where(f => f.KinopoiskId == updatedFilm.KinopoiskId)
-                .FirstOrDefaultAsync();
-
-            if (film == null)
-                await AddFilmAsync(updatedFilm);
+                .FirstAsync();
 
             film.Title = updatedFilm.Title;
             film.Description = updatedFilm.Description;
             film.PosterUrl = updatedFilm.PosterUrl;
             film.Year = updatedFilm.Year;
+            film.IsFullySynchronized = updatedFilm.IsFullySynchronized;
+            film.LastSync = updatedFilm.LastSync;
 
             await _dbContext.SaveChangesAsync();
             return film;
@@ -132,6 +142,9 @@ namespace Cinema.Services.Repositories
 
         public async Task<List<GenreEntity>> GetFilmGenresAsync(FilmEntity film)
         {
+            if (film.Id == default) //FIXME
+                film = await GetFilmByKinopoiskIdAsync(film.KinopoiskId);
+
             var filmGenres = await _dbContext.FilmGenres
                 .Where(fg => fg.FilmId == film.Id)
                 .Include(fg => fg.Genre)
@@ -140,6 +153,12 @@ namespace Cinema.Services.Repositories
             List<GenreEntity> genres = [];
             foreach (var fg in filmGenres)
                 genres.Add(fg.Genre);
+            return genres;
+        }
+
+        public async Task<List<GenreEntity>> GetAllGenresAsync()
+        {
+            var genres = await _dbContext.Genres.ToListAsync();
             return genres;
         }
     }

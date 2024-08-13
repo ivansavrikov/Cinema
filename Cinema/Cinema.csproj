@@ -120,6 +120,8 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Services\NavigationManager.cs" />
+    <Compile Include="Helpers\PagesTagsEnum.cs" />
     <Compile Include="Helpers\RelayCommand.cs" />
     <Compile Include="Models\Database\DatabaseContext.cs" />
     <Compile Include="Models\Database\EntitiesConfigurations\FilmConfiguration.cs" />
@@ -137,6 +139,7 @@
     <Compile Include="Helpers\BytesConverter.cs" />
     <Compile Include="Services\KinopoiskApiService.cs" />
     <Compile Include="Services\KinopoiskParserService.cs" />
+    <Compile Include="Services\FilmMigratorService.cs" />
     <Compile Include="Services\Repositories\DatabaseRepository.cs" />
     <Compile Include="Services\Repositories\KinopoiskRepository.cs" />
     <Compile Include="ViewModels\BaseViewModel.cs" />
@@ -144,6 +147,7 @@
     <Compile Include="ViewModels\FilmDetailsViewModel.cs" />
     <Compile Include="ViewModels\FilmsViewModel.cs" />
     <Compile Include="ViewModels\FilmViewModel.cs" />
+    <Compile Include="ViewModels\FiltersViewModel.cs" />
     <Compile Include="ViewModels\NavigationViewModel.cs" />
     <Compile Include="Views\FavoritesPage.xaml.cs">
       <DependentUpon>FavoritesPage.xaml</DependentUpon>

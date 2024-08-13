@@ -1,5 +1,6 @@
 ﻿using Cinema.Models.Database.Entities;
 using Cinema.Services.Repositories;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 
@@ -34,13 +35,12 @@ namespace Cinema.Services
 
         public async Task FillFilmsAsync()
         {
-            var films = await kinopoiskRepository.GetAllFilmsAsync();
+            var films = await kinopoiskRepository.GetFilmsAsync();
             foreach (var film in films)
             {
+                film.LastSync = DateTime.Now;
                 await databaseRepository.AddFilmAsync(film);
             }
-            //var film = await kinopoiskRepository.GetFilmByIdAsync(301);
-            //await databaseRepository.AddFilmAsync(film);
         }
     }
 }

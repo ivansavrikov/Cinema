@@ -1,5 +1,6 @@
 ﻿using Cinema.Helpers;
 using Cinema.Models.Entities;
+using System;
 using System.Threading.Tasks;
 using Windows.UI.Xaml.Media.Imaging;
 
@@ -10,7 +11,7 @@ namespace Cinema.ViewModels
         public FilmEntity Film { get; set; }
         public string Title { get; set; }
         public string TitleYear { get; set; }
-        public string Genres { get; set; }
+        public string Genres { get; set; } = "Жанры не загружены";
 
         private string _year;
         public string Year
@@ -36,6 +37,8 @@ namespace Cinema.ViewModels
 
         public string Description { get; set; }
 
+        public Uri KinopoiskUri { get; set; }
+
         public FilmViewModel(FilmEntity film)
         {
             Film = film;
@@ -43,10 +46,18 @@ namespace Cinema.ViewModels
             Year = Film.Year.ToString();
             TitleYear = $"{Title} ({Year})";
             Description = Film.Description ?? "Нет описания";
+            KinopoiskUri = new Uri($"https://www.kinopoisk.ru/film/{Film.KinopoiskId}/");
             _ = InitializeAsync();
         }
         public async Task InitializeAsync()
         {
+            if (Film.PosterImage == null)
+            {
+                Poster = new BitmapImage();
+                Poster.UriSource = new Uri(Film.PosterUrl);
+                return;
+            }
+
             Poster = await BytesConverter.ToBitmapImage(Film.PosterImage);
         }
     }
